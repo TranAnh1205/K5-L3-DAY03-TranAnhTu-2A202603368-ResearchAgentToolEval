@@ -12,7 +12,7 @@ Phần A giới thiệu agent để demo; Phần B ghi bằng chứng từ run v
 
 | Thành viên | Đóng góp có trong bản hợp nhất |
 |---|---|
-| Tran Anh Tu (`TranAnhTu_03368`) | Nền agent, prompt, UI Streamlit, bốn tool nghiên cứu mới, eval và báo cáo chính. |
+| Tran Anh Tu (`TranAnhTu_03368`) | **Nhánh nền của bản nộp chung.** Có chuỗi baseline và tối ưu v0–v5, `system_prompt.md`, `tools.yaml`, UI Streamlit (`app.py`), luồng chat và chặn gửi (`chat.py`), bốn tool mới `dedupe_sources`, `wiki`, `hn_search`, `github_repos`, 10 case eval nhóm, unit test, run và transcript. Bản hợp nhất được xây trên commit `61f285a` của nhánh này trước khi ghép phần của các thành viên khác. |
 | Pham Huu Duc (`PhamHuuDuc_03380`) | Tool `calculator` dùng cho số liệu nghiên cứu, poster demo, run OpenRouter v1–v3 và transcript. Phần tính toán đã được giới hạn cú pháp và bổ sung test trước khi kích hoạt. |
 | Nguyen Tran Anh Khoi (`nguyentrananhkhoi-03422`) | Bộ unit test TODO và rà soát báo cáo trên nhánh kế thừa Đức; lịch sử commit được giữ trong merge. Các test trùng mục tiêu với bản hiện tại được giữ một bản. |
 | Khoa (`llkhoa`) | Sửa xử lý giới hạn kết quả ở `timeline`, `social_search`, `lookup`, `policy` và định dạng nguồn thiếu URL. |
