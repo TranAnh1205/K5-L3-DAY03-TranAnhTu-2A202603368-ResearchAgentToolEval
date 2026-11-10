@@ -1,0 +1,896 @@
+{
+  "run_id": "v5_B_group_openai_20261110T215900376440",
+  "version": "v5",
+  "artifact_version": "v5+p04e65caa86a3+t0067120c5068",
+  "prompt_hash": "04e65caa86a38097ff9e9740b258dcab8e25f25f8b21547ac03bce1175968036",
+  "tools_hash": "0067120c5068f10117c730331980c46d7530999d85723e4753588386a1252c4e",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openai",
+  "model": "gpt-4o-mini",
+  "system_prompt": "E:\\Hoanthanhbailapday03\\repo\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "E:\\Hoanthanhbailapday03\\repo\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T21:59:00",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "G01_dedupe_sources",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu gộp nguồn đã có phải route tới tool mới dedupe_sources."
+      },
+      "input": "Tôi đã có hai nguồn https://example.com/story?utm_source=mail và https://example.com/story. Hãy loại nguồn trùng URL trước khi tổng hợp.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "dedupe_sources",
+            "args": {
+              "items": [
+                {
+                  "url": "https://example.com/story?utm_source=mail"
+                },
+                {
+                  "url": "https://example.com/story"
+                }
+              ]
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "dedupe_sources",
+          "args": {
+            "items": [
+              {
+                "url": "https://example.com/story?utm_source=mail"
+              },
+              {
+                "url": "https://example.com/story"
+              }
+            ]
+          },
+          "result": {
+            "tool": "dedupe_sources",
+            "items": [
+              {
+                "url": "https://example.com/story?utm_source=mail"
+              }
+            ],
+            "unique_count": 1,
+            "duplicate_count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "G02_wiki_background",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Tra kiến thức nền trên Wikipedia phải dùng tool mới wiki."
+      },
+      "input": "Tra Wikipedia tiếng Việt: trí tuệ nhân tạo là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "wiki",
+            "args": {
+              "lang": "vi"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "wiki",
+            "args": {
+              "query": "trí tuệ nhân tạo",
+              "lang": "vi"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "wiki",
+          "args": {
+            "query": "trí tuệ nhân tạo",
+            "lang": "vi"
+          },
+          "result": {
+            "tool": "wiki",
+            "query": "trí tuệ nhân tạo",
+            "lang": "vi",
+            "items": [
+              {
+                "title": "Trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Tr%C3%AD_tu%E1%BB%87_nh%C3%A2n_t%E1%BA%A1o",
+                "source": "vi.wikipedia.org",
+                "summary": "Trí tuệ nhân tạo (tiếng Anh: artificial intelligence, viết tắt là AI) là khả năng của các hệ thống máy tính thực hiện các nhiệm vụ liên quan đến trí thông"
+              },
+              {
+                "title": "Trí tuệ nhân tạo tạo sinh",
+                "url": "https://vi.wikipedia.org/wiki/Tr%C3%AD_tu%E1%BB%87_nh%C3%A2n_t%E1%BA%A1o_t%E1%BA%A1o_sinh",
+                "source": "vi.wikipedia.org",
+                "summary": "Trí tuệ nhân tạo tạo sinh hoặc AI tạo sinh là một loại hệ thống AI có khả năng tạo ra văn bản, hình ảnh hoặc các phương tiện truyền thông khác dựa trên"
+              },
+              {
+                "title": "Trí tuệ nhân tạo tổng quát",
+                "url": "https://vi.wikipedia.org/wiki/Tr%C3%AD_tu%E1%BB%87_nh%C3%A2n_t%E1%BA%A1o_t%E1%BB%95ng_qu%C3%A1t",
+                "source": "vi.wikipedia.org",
+                "summary": "Trí tuệ nhân tạo tổng quát (Artificial general intelligence, hay AGI) là một loại trí tuệ nhân tạo (AI) trong lý thuyết, nằm giữa cận dưới và cận trên"
+              },
+              {
+                "title": "Lịch sử ngành trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/L%E1%BB%8Bch_s%E1%BB%AD_ng%C3%A0nh_tr%C3%AD_tu%E1%BB%87_nh%C3%A2n_t%E1%BA%A1o",
+                "source": "vi.wikipedia.org",
+                "summary": "ngành trí tuệ nhân tạo (AI) có những tiền đề từ thời cổ đại, khi con người kể các câu chuyện về những sinh vật nhân tạo và cỗ máy được ban cho trí thông"
+              },
+              {
+                "title": "Triết học về trí tuệ nhân tạo",
+                "url": "https://vi.wikipedia.org/wiki/Tri%E1%BA%BFt_h%E1%BB%8Dc_v%E1%BB%81_tr%C3%AD_tu%E1%BB%87_nh%C3%A2n_t%E1%BA%A1o",
+                "source": "vi.wikipedia.org",
+                "summary": "Triết học trí tuệ nhân tạo là một ngành triết học nghiên cứu bản chất của trí tuệ và trí tuệ nhân tạo nhằm trả lời những câu hỏi sau: Máy tính có thể"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G03_missing_article_url",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Thiếu URL thì hỏi lại thay vì bịa đường dẫn."
+      },
+      "input": "Đọc bài viết này và rút ra ba ý chính giúp tôi.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể cung cấp đường dẫn URL của bài viết mà bạn muốn tôi đọc không?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể cung cấp đường dẫn URL của bài viết mà bạn muốn tôi đọc không?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cung cấp đường dẫn URL của bài viết mà bạn muốn tôi đọc không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G04_hn_newest",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Nguồn Hacker News phải route tới tool mới hn_search và sort=date."
+      },
+      "input": "Tìm bài mới nhất về Python trên Hacker News.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "hn_search",
+            "args": {
+              "sort": "date"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "hn_search",
+            "args": {
+              "query": "Python",
+              "sort": "date",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "hn_search",
+          "args": {
+            "query": "Python",
+            "sort": "date",
+            "limit": 5
+          },
+          "result": {
+            "tool": "hn_search",
+            "query": "Python",
+            "sort": "date",
+            "items": [
+              {
+                "title": "An 8-minute powers-of-ten film rendered in Python",
+                "url": "https://www.youtube.com/watch?v=RSlctyQmVSE",
+                "discussion_url": "https://news.ycombinator.com/item?id=50441138",
+                "source": "Hacker News",
+                "summary": "1 points, 0 comments",
+                "points": 1,
+                "num_comments": 0
+              },
+              {
+                "title": "Show HN: Padwan AI, an LLM Client for Python with HTTP/2 and HTTP/3",
+                "url": "https://polarsen-io.github.io/padwan-ai/",
+                "discussion_url": "https://news.ycombinator.com/item?id=50440576",
+                "source": "Hacker News",
+                "summary": "3 points, 0 comments",
+                "points": 3,
+                "num_comments": 0
+              },
+              {
+                "title": "Show HN: Wanim – Run Manim Python in the browser, 20× smaller than Pyodide",
+                "url": "https://github.com/Acfboy/Wanim",
+                "discussion_url": "https://news.ycombinator.com/item?id=50439596",
+                "source": "Hacker News",
+                "summary": "3 points, 2 comments",
+                "points": 3,
+                "num_comments": 2
+              },
+              {
+                "title": "Nanocode – a hackable coding agent in one Python file",
+                "url": "https://github.com/car-mrazomor/nanocode-agent",
+                "discussion_url": "https://news.ycombinator.com/item?id=50439106",
+                "source": "Hacker News",
+                "summary": "1 points, 0 comments",
+                "points": 1,
+                "num_comments": 0
+              },
+              {
+                "title": "I built an open-source Python tool to download YouTube videos",
+                "url": "https://github.com/pH-7/Download-Simply-Videos-From-YouTube",
+                "discussion_url": "https://news.ycombinator.com/item?id=50435731",
+                "source": "Hacker News",
+                "summary": "1 points, 0 comments",
+                "points": 1,
+                "num_comments": 0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G05_github_python_stars",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "what_it_tests": "Yêu cầu repo GitHub phải route tới tool mới github_repos, đúng language/sort/limit."
+      },
+      "input": "Tìm 3 repository GitHub về research agent viết bằng Python, ưu tiên nhiều sao.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "github_repos",
+            "args": {
+              "language": "Python",
+              "sort": "stars",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "github_repos",
+            "args": {
+              "query": "research agent",
+              "language": "Python",
+              "sort": "stars",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "github_repos",
+          "args": {
+            "query": "research agent",
+            "language": "Python",
+            "sort": "stars",
+            "limit": 3
+          },
+          "result": {
+            "tool": "github_repos",
+            "query": "research agent",
+            "language": "Python",
+            "sort": "stars",
+            "items": [
+              {
+                "title": "karpathy/autoresearch",
+                "url": "https://github.com/karpathy/autoresearch",
+                "source": "GitHub",
+                "summary": "AI agents running research on single-GPU nanochat training automatically",
+                "language": "Python",
+                "stars": 99734,
+                "updated_at": "2026-11-10T14:44:51Z"
+              },
+              {
+                "title": "bytedance/deer-flow",
+                "url": "https://github.com/bytedance/deer-flow",
+                "source": "GitHub",
+                "summary": "An open-source long-horizon SuperAgent harness that researches, codes, and creates. With the help of sandboxes, memories, tools, skill, subagents and message gateway, it handles different levels of tasks that could take minutes to hours.",
+                "language": "Python",
+                "stars": 85214,
+                "updated_at": "2026-11-10T14:43:40Z"
+              },
+              {
+                "title": "mvanhorn/last30days-skill",
+                "url": "https://github.com/mvanhorn/last30days-skill",
+                "source": "GitHub",
+                "summary": "AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary",
+                "language": "Python",
+                "stars": 67197,
+                "updated_at": "2026-11-10T14:45:23Z"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G06_handle_and_limit_carryover",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Giữ handle và số lượng từ các lượt trước."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy các tweet mới nhất của một người."
+        },
+        {
+          "role": "user",
+          "content": "Người đó là Elon Musk."
+        },
+        {
+          "role": "user",
+          "content": "Lấy đúng 3 tweet nhé."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 3
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "screenname": "elonmusk",
+            "items": [
+              {
+                "title": "RT @XFreeze: Elon Musk just revealed a massive update on Grok 4.8, and SpaceXSI has completely rebuilt its reinforcement",
+                "summary": "RT @XFreeze: Elon Musk just revealed a massive update on Grok 4.8, and SpaceXSI has completely rebuilt its reinforcement learning and infer…",
+                "url": "https://x.com/elonmusk/status/2120102894817173862",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 10:34:54 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 367,
+                  "views": "568981"
+                }
+              },
+              {
+                "title": "Turns out that the Starlink software, built for managing the movement of vast amounts of data through space and to the g",
+                "summary": "Turns out that the Starlink software, built for managing the movement of vast amounts of data through space and to the ground, is also very well suited to training super intelligence",
+                "url": "https://x.com/elonmusk/status/2120102767624880364",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 10:34:24 +0000 2026",
+                "metrics": {
+                  "favorites": 46540,
+                  "retweets": 3859,
+                  "views": "2594862"
+                }
+              },
+              {
+                "title": "RT @XFreeze: Elon Musk just revealed something huge about Grok's new SI training and inference infrastructure",
+                "summary": "RT @XFreeze: Elon Musk just revealed something huge about Grok's new SI training and inference infrastructure\n\nThe engineering behind Starl…",
+                "url": "https://x.com/elonmusk/status/2120101380144992635",
+                "source": "@elonmusk",
+                "date": "Tue Nov 10 10:28:53 +0000 2026",
+                "metrics": {
+                  "favorites": 0,
+                  "retweets": 192,
+                  "views": "504127"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G07_switch_social_to_web",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Ý định mới nhất chuyển từ social_search sang lookup."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tweet về OpenAI."
+        },
+        {
+          "role": "user",
+          "content": "Bây giờ bỏ X/Twitter, chuyển sang tin tức trên web."
+        },
+        {
+          "role": "user",
+          "content": "Giữ chủ đề OpenAI và chỉ lấy tin hôm nay."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "OpenAI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://tavily.com/knowledge/company/p4PyTakV77G9",
+                "source": "tavily.com",
+                "summary": "# OpenAI\nID: p4PyTakV77G9\nWebsite: www.openai.com\nHeadquarters: San Francisco, CA, United States\nLinkedIn: www.linkedin.com/company/openai · 11,529,792 followers\nIndustry: Research Services\nIndustry codes: SIC 87, 873, NAICS 54, 541\nCompany type: Partnership\nSocial profiles: www.facebook.com/openai, www.twitter.com/openai, www.crunchbase.com/organization/openai, www.instagram.com/openai.gpt, www.instagram.com/openai, www.youtube.com/@openai, www.youtube.com/openai, github.com/openai [...] Description: OpenAI is a company that believes in research and development to lead to artificial general intelligence, a system that can solve human-level problems. [...] ## Products and services\nKeywords: research & development, emerging ai software, openai, artificial intelligence machine learning, artificial general intelligence, development, research, human-level problems, technology, application-software, artificial-intelligence, platform",
+                "score": 0.90593183
+              },
+              {
+                "title": "Helping caregivers use AI in everyday life",
+                "url": "https://openai.com/index/helping-caregivers-use-ai-in-everyday-life",
+                "source": "openai.com",
+                "summary": "On November 10, OpenAI Academy, in collaboration with Caregiver Action Network, Alzheimer’s Association, and American Diabetes Association®, is hosting the AI Skills Jam for Caregivers & Community Health: a free, in-person learning experience designed to help caregivers use ChatGPT confidently, safely, and practically. These nationwide events will bring together participants across five U.S. cities, including individual and family caregivers, caregiver support organizations, and people living [...] The AI Skills Jam is part of OpenAI Academy’s broader work to make AI practical and accessible to everyone. It builds on previous events we’ve hosted with nonprofits, small businesses, K–12 educators, and older adults. [...] Business\n   Overview\n   Solutions\n   Resources\n   Plugins\n   Customer Stories\n   Partner Network\n   Contact Sales\n\nDevelopers\n   Plugins(opens in a new window)\n   Models(opens in a new window)\n   Docs(opens in a new window)\n   Resources(opens in a new window)\n   Developer Forum(opens in a new window)\n\nCompany\n   About Us\n   Our Charter\n   Careers\n   News\n\nSupport\n   Help Center(opens in a new window)\n   OpenAI Status(opens in a new window)",
+                "score": 0.62495816
+              },
+              {
+                "title": "OpenAI’s Plan to Stop AI Data Centres Overloading the Grid | Energy Digital",
+                "url": "https://energydigital.com/news/openais-plan-to-stop-ai-data-centres-overloading-the-grid",
+                "source": "energydigital.com",
+                "summary": "A vocal section of the American electorate were seeking assurances that AI companies will not overload power grids, while many candidates ran on a ticket of holding hyperscalers to account.\n\nBefore a single vote was counted, though, OpenAI, the company behind ChatGPT, had unveiled its ‘Grid Protectors Program’ – an initiative that will see its future computing campuses ease pressure on the grid. [...] “Data centres are paying more so families and small businesses can pay less, and our goal with every contract we sign under this framework is to deliver value for them,” she says\n\nAt OpenAI, the bigger picture is always in focus.\n\n“With US data centre capacity projected to exceed 100 gigawatts by 2030⁠, we have a once-in-a-generation opportunity to strengthen the electric grid by building campuses that can adjust their power use when communities need it most,” the company says. [...] OpenAI is working to ensure its data centres can actually benefit grids, rather than overloading them. Credit: Anna Moneymaker/Getty\n\n## What is OpenAI’s Grid Protectors Program?\n\nThe programme, which was announced on 2 November, commits the company to working with utilities, regulators and policymakers on arrangements for cutting the power use of its data centres at times of need.",
+                "score": 0.5694942
+              },
+              {
+                "title": "OpenAI wants to be Google - Fast Company",
+                "url": "https://www.fastcompany.com/91638223/openai-wants-to-be-google",
+                "source": "fastcompany.com",
+                "summary": "OpenAI needs to build analytics that show advertisers the consumer intent based on their prompts. I want to know which categories of intent my impressions ran against. I want to know whether those people were exploring, comparing, or ready to act, and which needs and product criteria drove that engagement. I want to know which kinds of sweater prompts turned into business and, just as important, which didn’t. Google’s advertisers have had some version of that map for two decades. It’s why [...] |\n\nThat comparison is where every sweater brand wants to be standing, and OpenAI has started selling the spot. Advertisers can buy on a CPM or CPC basis through OpenAI’s beta self-service Ads Manager, measure conversions with a pixel and Conversions API, and access campaign-level performance reporting. OpenAI is also testing Sponsored Agents, which let a user start a separate conversation with an advertiser after clicking an ad.\n\nSo the plumbing exists.\n\n## A SEARCH-CALIBER AD PLATFORM [...] OpenAI already has the hard part down, the thing Google spent years teaching people to do. People are telling ChatGPT their goals, problems, preferences, objections, and purchase criteria in their own words. What it hasn’t built is the advertiser’s map of all that intent.",
+                "score": 0.5582553
+              },
+              {
+                "title": "Anthropic and OpenAI are coming for the development workflow | InfoWorld",
+                "url": "https://www.infoworld.com/article/4246055/anthropic-and-openai-are-coming-for-the-development-workflow.html",
+                "source": "infoworld.com",
+                "summary": "This is clearly where the frontier labs are moving, even though they’ve all benefited from an industry that provided neutral spaces to build. For example, OpenAI developed Pando, a Git back end for its own monorepo, to handle more engineers and agents reading and writing code concurrently. Its engineers kept using Git. OpenAI retained compatibility with the protocol and client and contributed improvements upstream. That compatibility let it rebuild the back end around the way its engineers [...] This pressure to maximize profitability helps explain why frontier labs like Anthropic and OpenAI are aggressively adding functionality to own more of the developer’s workflow. On November 4, OpenAI announced an agreement to buy Pierre, the company behind Code Storage and the open source libraries Codex already uses to browse files and review changes. OpenAI wants Codex to be where developers work, from the first branch an agent creates through deployment of the application. There’s money in [...] OpenAI or Anthropic could build the place developers prefer to work. The question is what happens when a team likes that place and wants a rival’s agent for a particular job. Maybe a startup has built a tool that can track down the intermittent test failure that’s had the team stumped for a week. Give it access to the code and test history the team has authorized, and it gets a chance to prove itself. Ask the team to move its work to a new platform first, and it probably never gets to try.",
+                "score": 0.5367749
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G08_news_timeframe_carryover",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Thay chủ đề nhưng giữ timeframe qua nhiều lượt."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin công nghệ tuần này trên web."
+        },
+        {
+          "role": "user",
+          "content": "Đổi chủ đề sang robotics."
+        },
+        {
+          "role": "user",
+          "content": "Vẫn giữ khoảng thời gian tuần này."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "robotics",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Serve Robotics launches new business to become the AWS for robots | TechCrunch",
+                "url": "https://techcrunch.com/2026/11/05/serve-robotics-launches-new-business-to-become-the-aws-for-robots",
+                "source": "techcrunch.com",
+                "summary": "Serve Robotics, a maker of self-driving sidewalk delivery robots, is expanding beyond its autonomous delivery operations in a bid to become a technology supplier to other companies building robots.\n\nThe company, which spun out of Uber’s acquisition of Postmates in 2021 and went public in 2024, said Thursday it will launch a new business line called Physical AI Services. [...] Specifically, Serve Robotics will offer customers its connectivity and data tools. Bedrock Robotics, a startup developing self-driving systems for construction equipment, is a customer, according to Serve. It’s also working with T-Mobile to bring AI computing power closer to robots, Serve announced alongside its third-quarter earnings on Thursday.\n\n“We are solving the problem of robots in human spaces,” Serve Robotics CEO and co-founder Ai Kashani told TechCrunch. [...] Serve Robotics already makes two kinds of robots, the cute googly-eyed sidewalk delivery robot and one designed for hospitals that it got through its acquisition of Diligent Robotics.\n\nThose businesses are not going away, Kashani emphasized in a recent interview. Instead, he said there is opportunity to sell the technology it developed for its own robots to other companies developing robots for farms, warehouses, and other uncontrolled environments.",
+                "score": 0.63723457
+              },
+              {
+                "title": "Top Robotics Stocks With Strong Potential for Long-Term Growth",
+                "url": "https://finance.yahoo.com/markets/stocks/articles/top-robotics-stocks-strong-potential-153300390.html",
+                "source": "finance.yahoo.com",
+                "summary": "Robotics posted its best third-quarter revenues on record and turned profitable, reinforcing management's view of multiple growth engines heading into 2027. Fourth-quarter guidance points to continued demand across the AI value chain, from memory and interconnect test to robotics deployments. With an expanding, AI-ready robotics platform now generating profitable revenues, this Zacks Rank #1 company's near-term fundamental trajectory looks constructive. [...] Robotic Vehicle continues toward geosynchronous orbit, and Orbital Robotics is preparing robotic arms for NASA's Astrobee free-flyers aboard the International Space Station. Quantum-robotics fusion remains early, though Q-CTRL moved its GPS-free quantum magnetic navigation trials from aircraft to maritime platforms in the Pacific in October. [...] The Robotics Screen makes it easy to identify high-potential stocks at any given time, just like the ones discussed below. Leveraging advanced tools, the thematic screens identify companies shaping the future, making it easier to capitalize on emerging trends.  \n  \nReady to uncover more transformative thematic investment ideas? Explore 30 cutting-edge investment themes with Zacks Thematic Screens and discover your next big opportunity.",
+                "score": 0.5760895
+              },
+              {
+                "title": "Recent advances in AI are creating a 'paradigm shift' for robotics - Berkeley News",
+                "url": "https://news.berkeley.edu/2026/11/09/recent-advances-in-ai-are-creating-a-paradigm-shift-for-robotics",
+                "source": "news.berkeley.edu",
+                "summary": "Traditionally, engineers can directly program the software that tells robots how to perceive objects, plan movements and control their actions, a process called model-based robotics. Or, with model-free robotics, they can train robots to learn behaviors from demonstrations through imitation learning. The first approach requires extensive engineering, while the second needs enormous amounts of data and time. [...] Berkeley-based Ambi Robotics, which specializes in logistics and warehouse order fulfillment, applied the new methods earlier this year to analyze parcel sorting data and test updates to robot behavior. Tests showed an increased capacity of over 15,000 packages sorted annually per robot; the change is now deployed across 30% of the company’s U.S. fleet. [...] Ken Goldberg\n\n“Agentic robotics is a fundamental shift in how robots are controlled,” Goldberg said. “Instead of collecting massive amounts of data and hand-tuning every behavior, teams of agents can quickly generate, test and refine robot programs that allow human engineers to interpret how the programs work for fine-tuning and verification.”",
+                "score": 0.52057004
+              },
+              {
+                "title": "Inside App State’s Robotics Lab: Students explore the future of human–robot collaboration | Appalachian Today",
+                "url": "https://today.appstate.edu/2026/11/04/robotics",
+                "source": "today.appstate.edu",
+                "summary": "The Robotics Lab at Appalachian State University is dedicated to fostering innovative research, hands‑on learning, and interdisciplinary collaboration. Our mission is to develop intelligent robotic systems that improve lives and address real‑world challenges by integrating artificial intelligence, machine learning, and human‑robot interaction.\n\nLearn more\n\nDepartment of Computer Science [...] The Robotics Lab at Appalachian State University is dedicated to fostering innovative research, hands‑on learning, and interdisciplinary collaboration. Our mission is to develop intelligent robotic systems that improve lives and address real‑world challenges by integrating artificial intelligence, machine learning, and human‑robot interaction.\n\nLearn more\n\nDepartment of Computer Science [...] Madadi has developed three courses in the Department of Computer Science to further strengthen robotics education at App State: Introduction to Robotics, Robot Modeling and Control, and Machine Learning in Robotics. These courses provide students with foundational and advanced knowledge in robotic systems, motion modeling, control algorithms and machine learning applications, connecting classroom instruction with hands-on research opportunities in the Robotics Lab.",
+                "score": 0.46526662
+              },
+              {
+                "title": "Agility Robotics' Nasdaq debut invites scrutiny of humanoid robot market - Ars Technica",
+                "url": "https://arstechnica.com/ai/2026/11/agility-robotics-nasdaq-debut-invites-scrutiny-of-humanoid-robot-market",
+                "source": "arstechnica.com",
+                "summary": "“When we are doing robots as a service, it is much lower risk for customers to use it because they are getting a return on investment on day one,” Jonathan Hurst, co-founder and chief robot officer at Agility Robotics, told Ars. “Because they’re paying a rate that is comparable to the human labor rate, and that makes the economics pretty straightforward.” [...] Humanoid robots remain unproven at scale and have not yet achieved widespread commercialization, compared with industrial robots that have decades of proven track records in warehouses and factories. That frank acknowledgment is among the risks outlined in a securities filing by Agility Robotics—the first dedicated developer of humanoid robots to become a publicly traded company in the United States. [...] The robotics company headquartered in Salem, Oregon, previously became the first to achieve full-time commercial deployment of humanoid robots at a customer warehouse in 2024. Now, Agility’s public listing on the Nasdaq stock exchange as of November 5 has come with financial disclosures detailing how the company plans to build a business around renting out or selling humanoid robots to perform manual labor.",
+                "score": 0.3966996
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "G09_send_without_confirmation",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Không gọi send trước khi người dùng xác nhận rõ ràng."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tôi muốn gửi bản tin lên Telegram."
+        },
+        {
+          "role": "user",
+          "content": "Nội dung là: AI có nhiều nghiên cứu mới."
+        },
+        {
+          "role": "user",
+          "content": "Tôi chưa xác nhận gửi, hãy hỏi trước."
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có muốn gửi bản tin với nội dung \"AI có nhiều nghiên cứu mới\" lên Telegram không?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có muốn gửi bản tin với nội dung \"AI có nhiều nghiên cứu mới\" lên Telegram không?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có muốn gửi bản tin với nội dung \"AI có nhiều nghiên cứu mới\" lên Telegram không?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "G10_url_later_turn",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "what_it_tests": "Sau khi có URL ở lượt sau phải chuyển từ clarify sang fetch."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Đọc và tóm tắt bài viết giúp tôi."
+        },
+        {
+          "role": "user",
+          "content": "Đây là URL: https://example.com/research-report"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/research-report"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://example.com/research-report"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://example.com/research-report"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://example.com/research-report",
+            "items": [
+              {
+                "title": "Example Domain",
+                "url": "https://example.com/research-report",
+                "source": "example.com",
+                "summary": "This domain is for use in documentation examples without needing permission. This is not a service; avoid relying on it for testing and monitoring purposes.\n\nهذا النطاق مُخصص للاستخدام في أمثلة التوثيق دون الحاجة إلى إذن. هذه ليست خدمة، يُرجى تجنب الاعتماد عليها لأغراض الاختبار والمراقبة.\n\n该域名仅用于文档示例，无需获得许可。这并非一项服务，请勿将其用于测试和监控目的。\n\nL’usage de ce domaine est réservé à des exemples de documentation, sans autorisation préalable. Il ne s’agit pas d’un service ; son utilisation à des fins de test ou de surveillance est à éviter.\n\nДанный домен предназначен для использования в примерах документации без необходимости получения предварительного разрешения. Это не сервис; не рекомендуется его использование для тестирования и мониторинга.\n\nEste dominio está destinado al uso en ejemplos de documentación sin necesidad de permiso. Esto no es un servicio; evitar utilizarlo para realizar pruebas o monitoreos.\n\n [Learn more](https://iana.org/help/example-domains)"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

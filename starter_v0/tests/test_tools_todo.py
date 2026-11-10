@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from conftest import FakeResponse
 from tools import TOOL_FUNCTIONS
+import requests
 
 
 # ---------------- new team tool: dedupe_sources ----------------
@@ -180,3 +181,82 @@ def test_dedupe_sources_rejects_non_string_url_without_raising() -> None:
     result = TOOL_FUNCTIONS["dedupe_sources"](items=[{"url": 42}])
     assert result["error"] == "ValueError"
     assert "URL must be a string" in result["message"]
+
+
+# ---------------- new team tools: wiki, hn_search, github_repos ----------------
+
+
+def test_wiki_maps_results_and_strips_html(fake_http) -> None:
+    calls = fake_http(FakeResponse({"query": {"search": [
+        {"title": "Artificial intelligence", "snippet": "<span>AI</span> &amp; research"}
+    ]}}))
+    result = TOOL_FUNCTIONS["wiki"](query="AI", lang="en", limit=1)
+    assert calls[0]["params"]["srsearch"] == "AI"
+    assert calls[0]["params"]["srlimit"] == 1
+    assert result["items"][0]["summary"] == "AI & research"
+    assert result["items"][0]["url"] == "https://en.wikipedia.org/wiki/Artificial_intelligence"
+
+
+def test_wiki_bad_input_makes_no_request(fake_http) -> None:
+    calls = fake_http(FakeResponse({}))
+    assert TOOL_FUNCTIONS["wiki"](query=" ")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["wiki"](query="AI", lang="xx")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["wiki"](query="AI", lang=[])["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["wiki"](query="AI", limit=0)["error"] == "ValueError"
+    assert calls == []
+
+
+def test_wiki_http_error_returns_dict(fake_http) -> None:
+    fake_http(FakeResponse(status_code=503))
+    assert TOOL_FUNCTIONS["wiki"](query="AI")["error"] == "HTTPError"
+
+
+def test_hn_search_routes_date_and_maps_discussion(fake_http) -> None:
+    calls = fake_http(FakeResponse({"hits": [
+        {"objectID": "123", "title": "New Python", "url": None, "points": 12, "num_comments": 4}
+    ]}))
+    result = TOOL_FUNCTIONS["hn_search"](query="Python", sort="date", limit=1)
+    assert calls[0]["url"].endswith("/search_by_date")
+    assert calls[0]["params"] == {"query": "Python", "tags": "story", "hitsPerPage": 1}
+    assert result["items"][0]["url"] == "https://news.ycombinator.com/item?id=123"
+    assert result["items"][0]["points"] == 12
+
+
+def test_hn_search_bad_input_makes_no_request(fake_http) -> None:
+    calls = fake_http(FakeResponse({}))
+    assert TOOL_FUNCTIONS["hn_search"](query="")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["hn_search"](query="Python", sort="wrong")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["hn_search"](query="Python", sort=[])["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["hn_search"](query="Python", limit=True)["error"] == "ValueError"
+    assert calls == []
+
+
+def test_hn_search_timeout_returns_dict(fake_http) -> None:
+    fake_http(requests.Timeout("timed out"))
+    assert TOOL_FUNCTIONS["hn_search"](query="Python")["error"] == "Timeout"
+
+
+def test_github_repos_filters_language_and_stars(fake_http) -> None:
+    calls = fake_http(FakeResponse({"items": [
+        {"full_name": "owner/repo", "html_url": "https://github.com/owner/repo",
+         "description": "A research agent", "language": "Python", "stargazers_count": 99}
+    ]}))
+    result = TOOL_FUNCTIONS["github_repos"](query="research agent", language="Python", sort="stars", limit=1)
+    assert calls[0]["params"] == {"q": "research agent language:Python", "per_page": 1,
+                                    "sort": "stars", "order": "desc"}
+    assert result["items"][0]["stars"] == 99
+
+
+def test_github_repos_bad_input_makes_no_request(fake_http) -> None:
+    calls = fake_http(FakeResponse({}))
+    assert TOOL_FUNCTIONS["github_repos"](query=" ")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["github_repos"](query="AI", sort="wrong")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["github_repos"](query="AI", sort=[])["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["github_repos"](query="AI", language="Python:foo")["error"] == "ValueError"
+    assert TOOL_FUNCTIONS["github_repos"](query="AI", limit=21)["error"] == "ValueError"
+    assert calls == []
+
+
+def test_github_repos_rate_limit_returns_error_dict(fake_http) -> None:
+    fake_http(FakeResponse(status_code=403))
+    assert TOOL_FUNCTIONS["github_repos"](query="AI")["error"] == "HTTPError"

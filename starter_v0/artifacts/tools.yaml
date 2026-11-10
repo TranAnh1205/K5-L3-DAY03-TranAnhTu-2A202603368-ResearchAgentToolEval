@@ -1,5 +1,36 @@
 # Tool declarations used by the model. Names must match tools/__init__.py.
 tools:
+  - name: wiki
+    description: "Tra Wikipedia để tìm định nghĩa, tiểu sử hoặc kiến thức nền ổn định. Dùng khi người dùng hỏi 'X là gì/ai' hoặc nêu rõ Wikipedia; không dùng cho tin tức mới, tweet, paper hay tìm repo."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, description: "Chủ đề hoặc tên cần tra."}
+        lang: {type: string, enum: [vi, en], default: "vi", description: "Ngôn ngữ Wikipedia: vi hoặc en."}
+        limit: {type: integer, default: 5, description: "Số bài, từ 1 đến 10."}
+      required: [query]
+
+  - name: hn_search
+    description: "Tìm thảo luận hoặc bài đăng trên Hacker News theo chủ đề. Dùng khi người dùng nhắc Hacker News/HN hoặc cộng đồng lập trình; không dùng cho tweet, tin web nói chung hay repository GitHub."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, description: "Chủ đề ngắn gọn cần tìm."}
+        sort: {type: string, enum: [relevance, date], default: "relevance", description: "date=mới nhất; relevance=liên quan nhất."}
+        limit: {type: integer, default: 5, description: "Số kết quả, từ 1 đến 20."}
+      required: [query]
+
+  - name: github_repos
+    description: "Tìm repository mã nguồn mở trên GitHub. Dùng khi người dùng muốn repo/dự án/thư viện trên GitHub; không dùng để trả lời câu hỏi lập trình, đọc URL bài báo hoặc tìm tin tức."
+    parameters:
+      type: object
+      properties:
+        query: {type: string, description: "Từ khóa dự án, bỏ cụm từ GitHub hoặc repository chung chung."}
+        language: {type: string, default: "", description: "Ngôn ngữ lập trình nếu người dùng chỉ rõ, ví dụ Python hoặc Rust."}
+        sort: {type: string, enum: [best_match, stars, updated], default: "best_match", description: "stars=nhiều sao; updated=mới cập nhật; best_match=liên quan nhất."}
+        limit: {type: integer, default: 5, description: "Số repo, từ 1 đến 20."}
+      required: [query]
+
   - name: dedupe_sources
     description: "Gộp các nguồn nghiên cứu trùng URL trong danh sách item đã có. Dùng khi user yêu cầu loại nguồn trùng trước khi tổng hợp; không dùng để tìm hoặc tải nguồn mới. Giữ item đầu tiên và bỏ tham số theo dõi URL."
     parameters:

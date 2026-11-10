@@ -13,12 +13,12 @@
       "metadata": {"what_it_tests": "Yêu cầu gộp nguồn đã có phải route tới tool mới dedupe_sources."}
     },
     {
-      "id": "G02_social_top",
+      "id": "G02_wiki_background",
       "phase": "B",
-      "query": "Tìm các tweet phổ biến nhất về AI trên X.",
-      "failure_type": "wrong_arg_value",
-      "expect": {"tool_calls": [{"name": "social_search", "args": {"search_type": "Top"}}]},
-      "metadata": {"what_it_tests": "Tweet phổ biến trên X phải dùng social_search với Top."}
+      "query": "Tra Wikipedia tiếng Việt: trí tuệ nhân tạo là gì?",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "wiki", "args": {"lang": "vi"}}]},
+      "metadata": {"what_it_tests": "Tra kiến thức nền trên Wikipedia phải dùng tool mới wiki."}
     },
     {
       "id": "G03_missing_article_url",
@@ -29,20 +29,20 @@
       "metadata": {"what_it_tests": "Thiếu URL thì hỏi lại thay vì bịa đường dẫn."}
     },
     {
-      "id": "G04_news_today",
+      "id": "G04_hn_newest",
       "phase": "B",
-      "query": "Tìm tin tức về robotics hôm nay trên web.",
-      "failure_type": "wrong_arg_value",
-      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "robotics", "topic": "news", "timeframe": "day"}}]},
-      "metadata": {"what_it_tests": "Tin trên web hôm nay dùng lookup với topic news và timeframe day."}
+      "query": "Tìm bài mới nhất về Python trên Hacker News.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "hn_search", "args": {"sort": "date"}}]},
+      "metadata": {"what_it_tests": "Nguồn Hacker News phải route tới tool mới hn_search và sort=date."}
     },
     {
-      "id": "G05_out_of_scope",
+      "id": "G05_github_python_stars",
       "phase": "B",
-      "query": "Giải phương trình x^2 - 4 = 0 cho tôi.",
-      "failure_type": "out_of_scope",
-      "expect": {"no_tool": true},
-      "metadata": {"what_it_tests": "Yêu cầu giải toán ngoài phạm vi research không gọi tool."}
+      "query": "Tìm 3 repository GitHub về research agent viết bằng Python, ưu tiên nhiều sao.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "github_repos", "args": {"language": "Python", "sort": "stars", "limit": 3}}]},
+      "metadata": {"what_it_tests": "Yêu cầu repo GitHub phải route tới tool mới github_repos, đúng language/sort/limit."}
     },
     {
       "id": "G06_handle_and_limit_carryover",

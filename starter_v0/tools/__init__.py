@@ -18,6 +18,9 @@ from .social_search.tool import search_tweets
 from .send.tool import send_telegram
 from .lookup.tool import web_search
 from .dedupe_sources.tool import dedupe_sources
+from .wiki.tool import wiki
+from .hn_search.tool import hn_search
+from .github_repos.tool import github_repos
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -37,6 +40,9 @@ TOOL_FUNCTIONS = {
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
     "dedupe_sources": dedupe_sources,
+    "wiki": wiki,
+    "hn_search": hn_search,
+    "github_repos": github_repos,
 }
 
 

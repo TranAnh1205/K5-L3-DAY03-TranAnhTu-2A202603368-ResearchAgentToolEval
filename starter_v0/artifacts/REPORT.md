@@ -14,7 +14,7 @@ Phần A giới thiệu agent để demo; Phần B ghi bằng chứng từ run v
 
 ## A1. Agent này làm được gì
 
-Research Agent tìm tin trên web hoặc X/Twitter, đọc URL, tìm paper, tra policy nội bộ và tổng hợp nguồn đã có. Khi thiếu tài khoản hoặc URL, agent hỏi lại; yêu cầu gửi Telegram phải được xác nhận trước.
+Research Agent tìm tin trên web hoặc X/Twitter, đọc URL, tìm paper, tra policy nội bộ và tổng hợp nguồn đã có. Agent còn tra Wikipedia, thảo luận Hacker News và repository GitHub. Khi thiếu tài khoản hoặc URL, agent hỏi lại; yêu cầu gửi Telegram phải được xác nhận trước.
 
 **Link dùng thử:** `http://localhost:8501` trên máy chạy lab (`python -m streamlit run app.py`). Chưa mở link công khai theo lựa chọn của người dùng.
 
@@ -29,6 +29,9 @@ Research Agent tìm tin trên web hoặc X/Twitter, đọc URL, tìm paper, tra 
 | fetch | đọc nội dung một URL | không |
 | format | trình bày nguồn đã có thành digest | không |
 | dedupe_sources | gộp các nguồn trùng URL | có |
+| wiki | tra định nghĩa, tiểu sử và kiến thức nền trên Wikipedia | có |
+| hn_search | tìm bài và thảo luận Hacker News | có |
+| github_repos | tìm repository GitHub theo chủ đề, ngôn ngữ, sao hoặc ngày cập nhật | có |
 | policy | tra tài liệu policy cục bộ | không |
 | papers / paper_text | tìm và đọc bài arXiv | không |
 | send | chuẩn bị tin nhắn Telegram; UI/CLI chỉ gửi thật sau xác nhận thủ công riêng | không |
@@ -40,6 +43,9 @@ Research Agent tìm tin trên web hoặc X/Twitter, đọc URL, tìm paper, tra 
 3. Đọc và tóm tắt trang này: https://www.python.org/about/
 4. Loại nguồn trùng trong `https://example.com/story?utm_source=mail` và `https://example.com/story`.
 5. Tìm paper arXiv về transformer và đọc paper phù hợp.
+6. Tra Wikipedia tiếng Việt: trí tuệ nhân tạo là gì?
+7. Tìm bài mới nhất về Python trên Hacker News.
+8. Tìm 3 repository GitHub về research agent viết bằng Python, ưu tiên nhiều sao.
 
 ---
 
@@ -56,6 +62,7 @@ Số liệu lấy từ `artifacts/version_log.csv` và `runs/*.json`.
 | v2 | `artifacts/system_prompt.md` | Hỏi xác nhận bằng `clarify(response_type="yes_no")` trước khi gửi sẽ sửa R12 | 0.90 | 0.85 (17/20; R12 PASS, nhưng R01/M02/M06 FAIL) | `runs/v2_B_base_openai_20261110T110731008259.json` |
 | v3 | `artifacts/tools.yaml` | Mô tả rõ `timeline`, `social_search`, `lookup` và args sẽ sửa routing nhiều lượt | 0.85 | 1.00 (20/20; 0 provider error) | `runs/v3_B_base_openai_20261110T110948519400.json` |
 | v4_6 | `artifacts/system_prompt.md` + `artifacts/tools.yaml`; thêm chốt gửi trong code | Kết nối đủ 11 tool, sửa prompt nhiều bước và mô tả policy mà không làm hồi quy routing base | 1.00 (v3-tool) | base 1.00 (20/20), group 1.00 (10/10), extension 1.00 (10/10); 0 provider error | `runs/v4_6_B_base_openai_20261110T210304240055.json`, `runs/v4_6_B_group_openai_20261110T210415181532.json`, `runs/v4_6_B_extension_openai_20261110T210342056688.json` |
+| v5 | Thêm `wiki`, `hn_search`, `github_repos` vào code, prompt và declaration | Bốn tool tự viết sẽ mở rộng nguồn nghiên cứu mà vẫn giữ routing cũ; eval nhóm kiểm tra cả bốn tool | base 1.00, group 1.00 (v4_6) | base 1.00 (20/20), group 1.00 (10/10), extension 1.00 (10/10); 0 provider error | `runs/v5_B_base_openai_20261110T215830021951.json`, `runs/v5_B_group_openai_20261110T215900376440.json`, `runs/v5_B_extension_openai_20261110T215935217433.json` |
 
 Các run trung gian v4–v4_5 được giữ trong `runs/` và `version_log.csv`. Một số thay đổi làm điểm base giảm xuống 18/20 hoặc 19/20; v4_6 là lần đo lại cả ba suite sau khi sửa hồi quy.
 
@@ -80,17 +87,17 @@ Nguồn: `runs/v0_B_base_openai_20261110T103307388725.json`. Baseline có 20 cas
 | Case ID | What It Tests | Expected Tool/Behavior | Result |
 |---|---|---|---|
 | G01_dedupe_sources | Route tới tool mới | dedupe_sources | PASS |
-| G02_social_top | Top tweet theo chủ đề | social_search / Top | PASS |
+| G02_wiki_background | Tra kiến thức nền Wikipedia | wiki / vi | PASS |
 | G03_missing_article_url | Thiếu URL | clarify / text | PASS |
-| G04_news_today | Tin hôm nay trên web | lookup / news / day | PASS |
-| G05_out_of_scope | Ngoài phạm vi | no_tool | PASS |
+| G04_hn_newest | Bài mới nhất trên Hacker News | hn_search / date | PASS |
+| G05_github_python_stars | Repo Python nhiều sao trên GitHub | github_repos / Python / stars / 3 | PASS |
 | G06_handle_and_limit_carryover | Giữ handle và limit | timeline / elonmusk / 3 | PASS |
 | G07_switch_social_to_web | Chuyển từ X sang web | lookup / news / day | PASS |
 | G08_news_timeframe_carryover | Giữ timeframe | lookup / robotics / week | PASS |
 | G09_send_without_confirmation | Xác nhận trước khi gửi | clarify / yes_no | PASS |
 | G10_url_later_turn | URL xuất hiện ở lượt sau | fetch | PASS |
 
-Group run: `runs/v3-tool_B_group_openai_20261110T111232980225.json` (10/10 PASS, 0 provider error). Sau khi thêm tool mới, base run `runs/v3-tool_B_base_openai_20261110T111340846274.json` vẫn đạt 20/20 PASS.
+Group run hiện tại: `runs/v5_B_group_openai_20261110T215900376440.json` (10/10 PASS, 0 provider error). Cả bốn tool mới đều có case routing (G01, G02, G04, G05); base run `runs/v5_B_base_openai_20261110T215830021951.json` đạt 20/20 PASS. Run v3-tool được giữ làm bằng chứng lịch sử.
 
 ## B4. Live Chat Evidence
 
@@ -106,8 +113,10 @@ Transcript mới: `transcripts/v4_6_openai_20261110T213256375363.transcript.json
 
 | Bonus | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| UI | `app.py` | Streamlit local mở trên `http://localhost:8501`; cả 11 tool khai báo được đưa vào model; AppTest luồng chờ gửi/hủy không lỗi | UI cần một lần bấm xác nhận riêng trước khi Telegram POST; chưa có link public |
-| Tool unit tests (`tests/`) | `tests/test_tools_todo.py`, `tests/test_chat_send_guard.py`, `tests/test_paper_tools.py`, `tests/test_rapidapi_errors.py` | 6 test cho `dedupe_sources` PASS; toàn suite 93 PASS, 0 skipped; test chặn model tự xác nhận gửi, parse arXiv offline và báo lỗi RapidAPI rõ ràng | HTTP của unit test được mock |
+| UI | `app.py` | Streamlit local mở trên `http://localhost:8501`; cả 14 tool khai báo được đưa vào model; AppTest luồng chờ gửi/hủy không lỗi | UI cần một lần bấm xác nhận riêng trước khi Telegram POST; chưa có link public |
+| Bốn tool mới | `tools/{dedupe_sources,wiki,hn_search,github_repos}/` | Mỗi tool có `tool.py`, `TOOL.md`, registry và declaration; G01/G02/G04/G05 đều PASS | Ba nguồn live không cần API key nhưng phụ thuộc dịch vụ ngoài; GitHub có rate limit |
+| Tool unit tests (`tests/`) | `tests/test_tools_todo.py`, `tests/test_chat_send_guard.py`, `tests/test_paper_tools.py`, `tests/test_rapidapi_errors.py` | ≥3 test cho mỗi tool mới; toàn suite 117 PASS, 0 skipped; test chặn model tự xác nhận gửi, parse arXiv offline và báo lỗi RapidAPI rõ ràng | HTTP của unit test được mock |
+| Smoke test ba nguồn mới | `scripts/smoke_all_tools.py`, `analysis/tool_smoke_new_tools.json` | wiki, hn_search, github_repos đều completed với API thật | Mỗi lần smoke chỉ lấy 1 item để tiết kiệm quota |
 | Smoke test tất cả tool | `scripts/smoke_all_tools.py`, `analysis/tool_smoke_v4_6.json`, `analysis/tool_smoke_after_rapidapi.json`, `analysis/tool_smoke_rapidapi_diagnostic.json` | 7 tool hoàn tất ở lần chạy đầu; sau khi cấp quyền, timeline và social_search cũng hoàn tất (mỗi tool trả 1 tweet trong diagnostic); send bị chặn đúng khi chưa xác nhận | `papers` gặp timeout/lỗi HTTP ở arXiv; Telegram chưa có `TELEGRAM_CHAT_ID` nên không gửi thật |
 
 Unit test chưa phát hiện bug trong tool có sẵn. Eval đo việc chọn tool và args, không chứng minh mọi API bên ngoài chạy được. RapidAPI từng trả 403/429 trước khi ứng dụng được cấp quyền; lần chạy mới nhất đã thành công với cả timeline và social_search. arXiv search vẫn gặp timeout/lỗi HTTP. Tool `paper_text` đã đọc PDF arXiv thật; `papers` đã được kiểm tra parse Atom bằng unit test offline.
@@ -118,7 +127,7 @@ Unit test chưa phát hiện bug trong tool có sẵn. Eval đo việc chọn to
 - `tools.yaml` phù hợp với routing web/X và quy ước `query`, `topic`, `timeframe`, `screenname`.
 - R12 cần xem thủ công cả ranh giới hành động gửi. Run v2 cho thấy R12 PASS nhưng điểm tổng giảm từ 0.90 xuống 0.85, nên phải kiểm tra toàn bộ suite sau mỗi thay đổi.
 - Eval chỉ chấm tool call và args: transcript cũ gọi đúng `timeline` nhưng thiếu `RAPIDAPI_KEY`. Sau khi key và quyền được bổ sung, transcript v4_6 chứng minh cả timeline và social_search trả dữ liệu thật.
-- UI hiện nạp đủ 11 tool, còn lớp chặn độc lập trong `chat.py` giữ mọi lệnh `send` ở trạng thái chờ bấm xác nhận. Model tự đặt `confirmed=true` không thể gửi trực tiếp từ UI/CLI.
+- UI hiện nạp đủ 14 tool, còn lớp chặn độc lập trong `chat.py` giữ mọi lệnh `send` ở trạng thái chờ bấm xác nhận. Model tự đặt `confirmed=true` không thể gửi trực tiếp từ UI/CLI.
 
 ## B7. Small Local Model Challenge (bonus)
 
