@@ -10,4 +10,6 @@ Commit gốc `69aa92a` có tác giả `AnhTu <atus011205@gmail.com>` và thêm c
 
 Hai hash snapshot trên trùng `prompt_hash` và `tools_hash` trong run v3. UI của Tú là `app.py`; file này tiếp tục được cập nhật sau v3, nên không dùng hash hiện tại làm hash của v3.
 
+Commit ghi công riêng có bản sao **chính các file** trong `artifacts/versions/TranAnhTu_v3/`: prompt, tools, run và UI tại commit gốc. Các bản sao không được nạp vào agent, nên không thay đổi kết quả eval hiện tại.
+
 Run OpenRouter v3 của Pham Huu Duc là thử nghiệm riêng trên nhánh của Đức, không phải run OpenAI v3 của Tú.
