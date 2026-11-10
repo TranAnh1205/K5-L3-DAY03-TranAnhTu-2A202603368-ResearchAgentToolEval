@@ -110,13 +110,28 @@ def test_policy_instruction_like_lines_go_to_untrusted_text() -> None:
 #   2. bad / missing input from the model (empty string, wrong type, out-of-enum value)
 #   3. failure path (missing key, HTTP error, timeout) -> returns error dict, does not raise
 
+from tools.calculator.tool import calculate
+
+
 def test_my_new_tool_happy_path() -> None:
-    pytest.skip(TODO)
+    res = calculate("125 * 34")
+    assert res.get("result") == 4250
+    assert res.get("expression") == "125 * 34"
+    sqrt_res = calculate("sqrt(256) + 44")
+    assert sqrt_res.get("result") == 60.0
 
 
 def test_my_new_tool_bad_input_from_model() -> None:
-    pytest.skip(TODO)
+    res = calculate("")
+    assert "error" in res
+    assert res["error"] == "empty_expression"
+    whitespace_res = calculate("   ")
+    assert whitespace_res["error"] == "empty_expression"
 
 
 def test_my_new_tool_failure_returns_error_dict() -> None:
-    pytest.skip(TODO)
+    res_forbidden = calculate("__import__('os').system('dir')")
+    assert "error" in res_forbidden
+    assert res_forbidden["error"] == "forbidden_expression"
+    res_syntax = calculate("125 +* 4")
+    assert "error" in res_syntax

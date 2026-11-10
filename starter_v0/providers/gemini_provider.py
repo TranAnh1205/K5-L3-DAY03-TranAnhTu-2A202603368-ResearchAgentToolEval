@@ -106,11 +106,21 @@ class GeminiProvider:
             config_kwargs["tools"] = [types.Tool(function_declarations=declarations)]
 
         client = genai.Client(api_key=api_key)
-        resp = client.models.generate_content(
-            model=model or self.default_model,
-            contents=contents,
-            config=types.GenerateContentConfig(**config_kwargs),
-        )
+        import time
+        for attempt in range(5):
+            try:
+                resp = client.models.generate_content(
+                    model=model or self.default_model,
+                    contents=contents,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                break
+            except Exception as exc:
+                if "429" in str(exc) and attempt < 4:
+                    print(f"Rate limited (429). Retrying in 15s (attempt {attempt+1}/5)...", flush=True)
+                    time.sleep(15)
+                else:
+                    raise
 
         text_parts: list[str] = []
         calls: list[ToolCall] = []

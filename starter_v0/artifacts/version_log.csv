@@ -1,1 +1,5 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_before,metric_after,run_file
+v0,PhamHuuDuc,none,none,eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68,5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0,baseline,khoi tao ban dau khong sua,0,0.5263,runs/v0_B_base_gemini_20261110T095639092964.json
+v1,PhamHuuDuc,system_prompt.md,v1,c42b9e1b1dc5,5b22a2476d41,fix_clarify_and_scope,yeu cau clarify khi thieu thong tin va khong goi tool ngoai le,0.5263,0.8000,runs/v1_B_base_openrouter_20261110T105743763461.json
+v2,PhamHuuDuc,tools.yaml,v2,c42b9e1b1dc5,efab0c21aac0,them_tool_calculator_va_eval_group,tich hop tool calculator va kiem thu group suite 10 cases,0.8000,0.7500,runs/v2_B_base_openrouter_20261110T111319152546.json
+v3,PhamHuuDuc,system_prompt.md+tools.yaml,v3,a42f9c77ad16,e877373b38c9,toi_uu_routing_va_ranh_gioi_xac_nhan,tinh chinh mo ta tools va luat boundary clarify truoc khi send,0.7500,0.9500,runs/v3_B_base_openrouter_20261110T113933370701.json
