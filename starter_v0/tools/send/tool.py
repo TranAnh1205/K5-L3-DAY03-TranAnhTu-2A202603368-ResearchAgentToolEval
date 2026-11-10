@@ -9,7 +9,11 @@ from tools._shared import TIMEOUT, err
 
 
 def send_telegram(text: str = "", confirmed: bool = False) -> dict[str, Any]:
-    if not confirmed:
+    if isinstance(confirmed, str):
+        is_confirmed = confirmed.strip().lower() in {"true", "1", "yes"}
+    else:
+        is_confirmed = bool(confirmed)
+    if not is_confirmed:
         return {
             "tool": "send_telegram",
             "status": "needs_confirmation",

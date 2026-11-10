@@ -1,0 +1,28 @@
+{
+  "transcript_id": "v3_openrouter_20261110T115451326036",
+  "version": "v3",
+  "artifact_version": "v3+p5393f589ef97+t96d4f1f07754",
+  "prompt_hash": "5393f589ef9753df6a9e44c14bb598a5d576f0b4e158c5ffcc3079be98a28258",
+  "tools_hash": "96d4f1f07754cf7602920646ac79858beec0c2ac1c784338d15a8f3882a430d6",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\nkhoa\\OneDrive\\Desktop\\Thư mục mới\\Lab\\Day03-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\nkhoa\\OneDrive\\Desktop\\Thư mục mới\\Lab\\Day03-Prompt-Engineering-Tool-Calling-Labs-student\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T11:54:51",
+  "updated_at": "2026-11-10T12:00:06",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-10T11:54:53",
+      "user": "hihi",
+      "status": "provider_error",
+      "assistant_text": null,
+      "rounds": [],
+      "tool_events": [],
+      "error": "AuthenticationError: Error code: 401 - Missing Authentication header",
+      "ended_at": "2026-11-10T11:54:55"
+    }
+  ]
+}

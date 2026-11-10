@@ -27,7 +27,7 @@ Preflight:
 
 ```bash
 cd starter_v0
-python scripts/preflight_provider.py --provider openrouter
+python scripts/preflight_provider.py --provider gemini
 ```
 
 Local model (bonus Small Local Model Challenge, không cần API key):
@@ -75,7 +75,7 @@ Setup:
 3. Add to `starter_v0/.env`:
 
 ```bash
-FIRECRAWL_API_KEY=fc-...
+$env:FIRECRAWL_API_KEY=fc-...
 ```
 
 Quick test:

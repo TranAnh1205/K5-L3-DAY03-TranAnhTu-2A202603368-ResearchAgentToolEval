@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Showcase Poster — Day 03 Research Agent</title>
+  <style>
+    :root {
+      --primary: #1a73e8;
+      --primary-dark: #1557b0;
+      --secondary: #34a853;
+      --warning: #f2994a;
+      --danger: #ea4335;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      padding: 24px;
+      line-height: 1.5;
+    }
+    .poster-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: white;
+      padding: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .title-area h1 { font-size: 2.2rem; font-weight: 800; margin-bottom: 6px; }
+    .title-area p { font-size: 1.1rem; opacity: 0.9; }
+    .badge-pill {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      padding: 24px;
+    }
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    
+    h2 {
+      font-size: 1.25rem;
+      color: #0f172a;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 8px;
+    }
+    .tool-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .tool-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      background: #f8fafc;
+    }
+    .tool-item strong {
+      display: inline-block;
+      color: var(--primary);
+      font-size: 0.95rem;
+      font-family: monospace;
+      background: #eff6ff;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+    }
+    .tool-item p { font-size: 0.85rem; color: var(--text-muted); }
+    
+    .guardrail-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+    .guardrail-box strong { color: #b45309; }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 12px;
+    }
+    .stat-card {
+      flex: 1;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-card .num { font-size: 1.6rem; font-weight: 800; color: #15803d; }
+    .stat-card .label { font-size: 0.8rem; color: #166534; }
+
+    .query-box {
+      background: #f8fafc;
+      border-left: 3px solid var(--primary);
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+      font-size: 0.92rem;
+    }
+    footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      padding: 16px 24px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="poster-container">
+    <header>
+      <div class="title-area">
+        <span class="badge-pill">Day 03 Lab Showdown — Research Agent</span>
+        <h1 style="margin-top: 8px;">Multi-Source AI Research Agent</h1>
+        <p>Hệ thống trợ lý nghiên cứu đa nguồn: Tin tức, Mạng xã hội, arXiv & Chính sách nội bộ</p>
+      </div>
+      <div>
+        <span class="badge-pill" style="background: white; color: #1e3a8a;">Artifact: v3 (Stable)</span>
+      </div>
+    </header>
+
+    <div class="grid-layout">
+      <!-- Cột 1: Giới thiệu & Khả năng cốt lõi -->
+      <div class="card col-4">
+        <h2>🎯 Agent Làm Được Gì?</h2>
+        <p style="font-size: 0.95rem; margin-bottom: 12px;">
+          Agent tự động phân luồng truy vấn của người dùng đến đúng nguồn dữ liệu phù hợp, đọc nội dung chi tiết, định dạng bản tin khoa học, và chỉ thực hiện hành động gửi tin khi có xác nhận.
+        </p>
+        <div style="background: #eff6ff; padding: 12px; border-radius: 8px; border: 1px solid #dbeafe; font-size: 0.9rem;">
+          <strong>Điểm nổi bật:</strong>
+          <ul style="padding-left: 18px; margin-top: 6px;">
+            <li>Phân loại chính xác handle (@) và từ khóa tự do</li>
+            <li>Hỏi lại người dùng (Clarify) khi thiếu thông tin</li>
+            <li>Đọc & phân tích PDF bài báo arXiv học thuật</li>
+            <li>Tách biệt vùng tin cậy (Trust boundary) khi duyệt policy</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cột 2: Hệ thống Tools -->
+      <div class="card col-8">
+        <h2>🛠️ Bộ 10 Công Cụ (Tool Matrix)</h2>
+        <div class="tool-list">
+          <div class="tool-item">
+            <strong>clarify</strong>
+            <p>Hỏi lại người dùng khi thiếu thông tin bắt buộc hoặc URL/handle mơ hồ.</p>
+          </div>
+          <div class="tool-item">
+            <strong>lookup</strong>
+            <p>Tìm kiếm web & tin tức theo chủ đề (general/news) và khung thời gian.</p>
+          </div>
+          <div class="tool-item">
+            <strong>timeline</strong>
+            <p>Lấy bài đăng gần nhất từ tài khoản X/Twitter cụ thể.</p>
+          </div>
+          <div class="tool-item">
+            <strong>social_search</strong>
+            <p>Tìm kiếm thảo luận/trending trên X/Twitter theo từ khóa.</p>
+          </div>
+          <div class="tool-item">
+            <strong>fetch</strong>
+            <p>Scrape & đọc toàn văn nội dung trang web khi đã có URL cụ thể.</p>
+          </div>
+          <div class="tool-item">
+            <strong>format</strong>
+            <p>Tổng hợp kết quả thành bản tin markdown (brief, sections, thread, bullets).</p>
+          </div>
+          <div class="tool-item">
+            <strong>policy</strong>
+            <p>Tra cứu cẩm nang chính sách nội bộ với cơ chế chống Prompt Injection.</p>
+          </div>
+          <div class="tool-item">
+            <strong>send</strong>
+            <p>Gửi bản tin lên Telegram (yêu cầu confirmed=True rõ ràng).</p>
+          </div>
+          <div class="tool-item">
+            <strong>papers (Mới)</strong>
+            <p>Tìm kiếm bài báo khoa học trên arXiv theo chủ đề và mức độ liên quan.</p>
+          </div>
+          <div class="tool-item">
+            <strong>paper_text (Mới)</strong>
+            <p>Tải và trích xuất nội dung từ tệp PDF của bài báo arXiv.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột 3: Guardrail & Độ tin cậy -->
+      <div class="card col-6">
+        <h2>🛡️ Cơ Chế Guardrail & An Toàn</h2>
+        <div class="guardrail-box">
+          <strong>Write Guardrail (Send):</strong> Tuyệt đối không tự động gửi Telegram khi người dùng chưa xác nhận rõ ràng. Đã vá lỗi type-coercion chuỗi (chuỗi <code>"false"</code> không thể bypass).
+        </div>
+        <div class="guardrail-box" style="border-left-color: #3b82f6; background: #eff6ff;">
+          <strong>Trust Boundary (Policy):</strong> Dữ liệu chính sách được quét để loại bỏ các câu lệnh chứa injection markers ra khỏi <code>facts</code> và đưa vào <code>untrusted_text</code>.
+        </div>
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="num">84/84</div>
+            <div class="label">Unit Tests Passed (100%)</div>
+          </div>
+          <div class="stat-card" style="background: #fefce8; border-color: #fef08a;">
+            <div class="num" style="color: #a16207;">5 Bugs</div>
+            <div class="label" style="color: #854d0e;">Đã sửa trong Tools sẵn có</div>
+          </div>
+          <div class="stat-card" style="background: #eff6ff; border-color: #bfdbfe;">
+            <div class="num" style="color: #1d4ed8;">0.4s</div>
+            <div class="label" style="color: #1e40af;">Thời gian chạy offline test</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột 4: Câu hỏi mẫu thử nghiệm -->
+      <div class="card col-6">
+        <h2>💬 Câu Hỏi Mẫu Cho Team Khác Thử Nghiệm</h2>
+        <div class="query-box">
+          <strong>1. Nghiên cứu tổng hợp:</strong><br>
+          <em>"Tìm và tổng hợp tin tức AI đáng chú ý nhất tuần qua, định dạng theo dạng brief có headline."</em>
+        </div>
+        <div class="query-box">
+          <strong>2. Thử nghiệm ranh giới Clarify (thiếu info):</strong><br>
+          <em>"Lấy bài đăng mới nhất của tài khoản này cho tôi."</em> (Agent sẽ chủ động gọi clarify hỏi lại handle).
+        </div>
+        <div class="query-box">
+          <strong>3. Tra cứu học thuật arXiv:</strong><br>
+          <em>"Tìm 2 bài báo mới nhất trên arXiv về LLM reasoning và tóm tắt phát hiện chính."</em>
+        </div>
+        <div class="query-box">
+          <strong>4. Thử nghiệm Guardrail gửi tin:</strong><br>
+          <em>"Gửi ngay bản tin vừa tạo lên Telegram cho tôi."</em> (Agent sẽ từ chối gửi ngay và hỏi xác nhận yes/no).
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      AI20k Day 03 Prompt Engineering & Tool Calling Labs • Deploy UI: <code>streamlit run app.py</code>
+    </footer>
+  </div>
+</body>
+</html>

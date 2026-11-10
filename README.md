@@ -19,6 +19,8 @@ Nhiệm vụ bắt buộc:
 
 - Setup chạy được bằng provider thật.
 - Agent có ít nhất 5 tool trong `artifacts/tools.yaml`.
+
+
 - Chạy base eval.
 - Tối ưu ít nhất 3 vòng sau baseline: `v1`, `v2`, `v3`.
 - Ghi `artifacts/version_log.csv`.
@@ -180,7 +182,7 @@ If preflight fails, fix provider key, dependency, or network before running eval
 Run the fixed base eval as `v0`:
 
 ```bash
-python run_eval.py \
+python run_eval.py --version v0 --provider gemini \
   --provider openrouter \
   --version v0 \
   --suite base \
@@ -227,11 +229,13 @@ Method, not memorized answers:
 Run at least three improved versions:
 
 ```bash
-python run_eval.py --provider openrouter --version v1 --suite base --eval-cases data/eval_base.json
-python run_eval.py --provider openrouter --version v2 --suite base --eval-cases data/eval_base.json
+python run_eval.py --provider gemini --version v1 --suite base --eval-cases data/eval_base.json
+python run_eval.py --provider gemini --version v2 --suite base --eval-cases data/eval_base.json
 python run_eval.py --provider openrouter --version v3 --suite base --eval-cases data/eval_base.json
 ```
-
+```bash
+python scripts/parse_runs.py runs/ --output artifacts/version_log.csv
+```
 After each run, fill `artifacts/version_log.csv`:
 
 ```text
@@ -256,7 +260,7 @@ Each case needs:
 Run:
 
 ```bash
-python run_eval.py \
+python run_eval.py --provider gemini --version v3 --suite group --eval-cases data/eval_group.json\
   --provider openrouter \
   --version v3 \
   --suite group \
@@ -266,7 +270,7 @@ python run_eval.py \
 Optional extension eval:
 
 ```bash
-python run_eval.py \
+python run_eval.py --provider gemini --version v3 --suite extension --eval-cases data/eval_research_extension.json \
   --provider openrouter \
   --version v3 \
   --suite extension \
@@ -280,6 +284,7 @@ Eval ở Step 4 đo **model** (chọn tool và args có đúng không). Unit tes
 ```bash
 pytest              # toàn bộ suite, offline, không tốn credit API
 pytest -v tests/test_tools_todo.py
+python -m pytest tests/test_tool_contract.py
 ```
 
 Có sẵn:

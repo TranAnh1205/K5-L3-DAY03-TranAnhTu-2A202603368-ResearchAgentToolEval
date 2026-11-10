@@ -13,7 +13,11 @@ def web_search(query: str = "", topic: str = "general", timeframe: str | None = 
         key = os.getenv("TAVILY_API_KEY")
         if not key:
             raise RuntimeError("Missing TAVILY_API_KEY env var")
-        body: dict[str, Any] = {"query": query, "topic": topic, "max_results": int(max_results or 5), "search_depth": "basic"}
+        try:
+            limit_val = int(5 if max_results is None else max_results)
+        except (ValueError, TypeError):
+            limit_val = 5
+        body: dict[str, Any] = {"query": query, "topic": topic, "max_results": max(0, limit_val), "search_depth": "basic"}
         if timeframe:
             body["time_range"] = timeframe
         response = requests.post(
