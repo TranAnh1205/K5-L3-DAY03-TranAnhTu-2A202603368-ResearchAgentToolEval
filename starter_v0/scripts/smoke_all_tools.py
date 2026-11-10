@@ -48,6 +48,7 @@ EXAMPLES = {
     "wiki": {"query": "Retrieval-augmented generation", "lang": "en", "limit": 1},
     "hn_search": {"query": "Python", "sort": "relevance", "limit": 1},
     "github_repos": {"query": "research agent", "language": "Python", "sort": "best_match", "limit": 1},
+    "calculator": {"expression": "1200 * 0.65"},
 }
 
 

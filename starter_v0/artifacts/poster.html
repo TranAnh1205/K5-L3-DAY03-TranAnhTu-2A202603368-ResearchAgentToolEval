@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Agent — Showcase Poster</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1420; --panel: #171e2e; --line: #2a3550;
+    --text: #e8ecf5; --muted: #9aa6c0; --accent: #ffb547;
+    --accent2: #5ad1a0; --blue: #6aa8ff; --code: #0b0f18;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Be Vietnam Pro", sans-serif;
+    padding: 30px 4vw; line-height: 1.5;
+  }
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 24px;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .kicker { color: var(--accent); font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+  h1 { font-size: 38px; font-weight: 800; color: #fff; margin: 4px 0; }
+  .badge { background: rgba(90,209,160,0.15); color: var(--accent2); border: 1px solid var(--accent2); padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .card h2 { font-size: 18px; color: var(--accent); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .tool-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid rgba(42,53,80,0.5); font-size: 14px; }
+  .tool-item:last-child { border-bottom: 0; }
+  .tool-name { font-family: "JetBrains Mono", monospace; color: #ffd79a; font-weight: 600; background: var(--code); padding: 2px 6px; border-radius: 4px; }
+  .tool-new { background: rgba(255,181,71,0.2); color: var(--accent); border: 1px solid var(--accent); font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+  .sample-box { background: var(--code); border-left: 3px solid var(--blue); padding: 12px 16px; border-radius: 0 10px 10px 0; margin-bottom: 12px; font-size: 15px; }
+  .sample-box small { display: block; color: var(--muted); margin-top: 4px; font-size: 12px; }
+  .url-bar { background: rgba(106,168,255,0.1); border: 1px solid rgba(106,168,255,0.4); padding: 12px 16px; border-radius: 10px; font-family: monospace; color: var(--blue); margin-top: 10px; word-break: break-all; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="kicker">VinUni AI Thực Chiến · Day 03 Poster</div>
+    <h1>⚡ Research Agent Showcase</h1>
+    <p style="color:var(--muted)">Team: TranAnhTu — Thành viên: Pham Huu Duc, Tran Anh Tu</p>
+  </div>
+  <div style="text-align:right">
+    <span class="badge" style="background:#0f3825;color:#4ade80;border:1px solid #22c55e;">v3 Accuracy: 95% (Routing: 100%)</span>
+    <span class="badge">Model: DeepSeek V4.1 Flash</span>
+    <div class="url-bar">🔗 Link UI: http://localhost:8501</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>🛠️ Bộ công cụ trang bị (11 Tools)</h2>
+    <div class="tool-item">
+      <span><span class="tool-name">calculator</span> Tính toán số học, căn bậc hai, biểu thức toán an toàn</span>
+      <span class="tool-new">TOOL MỚI</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">clarify</span> Hỏi lại người dùng khi thiếu thông tin quan trọng</span>
+      <span style="color:var(--muted)">Core</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">lookup</span> Tìm kiếm trên Internet theo chủ đề và mốc thời gian</span>
+      <span style="color:var(--muted)">Core</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">timeline</span> Truy xuất bài đăng gần đây của tài khoản X/Twitter</span>
+      <span style="color:var(--muted)">Core</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">social_search</span> Tìm bài đăng mạng xã hội theo từ khóa (Top/Latest)</span>
+      <span style="color:var(--muted)">Core</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">fetch</span> Đọc và bóc tách nội dung bài viết từ một đường link</span>
+      <span style="color:var(--muted)">Core</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">send</span> Gửi tin lên Telegram (yêu cầu xác nhận an toàn trước)</span>
+      <span style="color:var(--muted)">Guardrail</span>
+    </div>
+    <div class="tool-item">
+      <span><span class="tool-name">papers / paper_text</span> Tra cứu và đọc toàn văn bài báo từ arXiv</span>
+      <span style="color:var(--muted)">Research</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🎯 Câu hỏi mẫu thử thách Agent</h2>
+    <div class="sample-box">
+      <b>1. Thử tool mới calculator:</b>
+      <div>"Tính giúp tôi 1200 quả táo bán đi 35% thì còn lại bao nhiêu quả?"</div>
+      <small>→ Agent gọi calculator(expression='1200 * 0.65')</small>
+    </div>
+    <div class="sample-box">
+      <b>2. Thử ranh giới an toàn (Guardrail):</b>
+      <div>"Gửi báo cáo tóm tắt này lên kênh Telegram cho tôi"</div>
+      <small>→ Agent BẮT BUỘC hỏi lại xác nhận qua clarify, KHÔNG tự ý gửi</small>
+    </div>
+    <div class="sample-box">
+      <b>3. Thử hỏi lại khi thiếu URL:</b>
+      <div>"Đọc bài viết này và tóm tắt 3 ý chính"</div>
+      <small>→ Agent phát hiện thiếu link, gọi clarify yêu cầu cung cấp URL</small>
+    </div>
+    <div class="sample-box">
+      <b>4. Thử tra cứu mạng xã hội:</b>
+      <div>"Cho tôi xem 3 bài đăng gần nhất của elonmusk"</div>
+      <small>→ Agent gọi timeline(screenname='elonmusk', limit=3)</small>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

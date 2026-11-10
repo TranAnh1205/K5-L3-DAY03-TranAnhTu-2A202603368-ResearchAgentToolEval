@@ -21,6 +21,7 @@ from .dedupe_sources.tool import dedupe_sources
 from .wiki.tool import wiki
 from .hn_search.tool import hn_search
 from .github_repos.tool import github_repos
+from .calculator.tool import calculate
 
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
@@ -43,6 +44,7 @@ TOOL_FUNCTIONS = {
     "wiki": wiki,
     "hn_search": hn_search,
     "github_repos": github_repos,
+    "calculator": calculate,
 }
 
 

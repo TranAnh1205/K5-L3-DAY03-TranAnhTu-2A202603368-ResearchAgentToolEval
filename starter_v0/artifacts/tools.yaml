@@ -156,3 +156,11 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: calculator
+    description: "Tính số liệu đơn giản đã có trong nguồn nghiên cứu, như tỷ lệ và chênh lệch. Chỉ dùng khi câu hỏi nghiên cứu cần phép tính; không dùng cho bài tập toán độc lập hoặc lập trình."
+    parameters:
+      type: object
+      properties:
+        expression: {type: string, description: "Biểu thức số học, ví dụ 1200 * 0.65"}
+      required: [expression]
