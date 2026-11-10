@@ -7,7 +7,7 @@
 ## Team
 
 - Team: K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval
-- Members: Pham Huu Duc, Tran Anh Tu
+- Members: Pham Huu Duc, Tran Anh Tu, Nguyen Tran Anh Khoi
 - Provider/model: OpenRouter (TokenHarbor) / deepseek-v4.1-flash:free
 
 ---
@@ -60,10 +60,18 @@ Trợ lý nghiên cứu chuyên sâu đa tác vụ: tự động tìm kiếm th�
 
 ## B2. Failure Analysis
 
+> **v0 baseline**: 10/19 case PASS, 9 case FAIL (accuracy = 0.5263). M06_switch_tool gặp provider error không tính vào 19 case đo được.
+
 | Case ID | Failure Type | Actual Tool Calls | What Failed | Fix |
 |---|---|---|---|---|
-| R03_web_news_routing | wrong_tool | social_search | Model nhầm tin tức chung với tìm kiếm mạng xã hội | Làm rõ description giữa lookup(topic=news) và social_search |
-| R12_confirm_before_send | wrong_boundary | send | Chưa có xác nhận rõ ràng nhưng model vẫn gọi send | Siết chặt prompt: chỉ send khi có từ khóa xác nhận cụ thể |
+| R03_web_news_routing | wrong_arg_value | lookup | Model gọi đúng tool lookup nhưng truyền sai giá trị query (không dùng topic=news) | Làm rõ trong tools.yaml: topic=news cho tin tức, thêm rule routing |
+| R08_out_of_scope | out_of_scope | (no tool / wrong) | Model trả lời câu hỏi ngoài phạm vi agent thay vì từ chối | Thêm rule từ chối rõ ràng trong system_prompt |
+| R09_no_tool_capability | unnecessary_tool | (gọi tool không tồn tại) | Model cố gọi tool không được khai báo | Mô tả rõ giới hạn capability trong prompt và tools.yaml |
+| R10_missing_handle | missing_info | timeline | Model gọi timeline thiếu screenname không hỏi clarify | Siết rule: bắt buộc clarify khi thiếu handle |
+| R11_missing_url | missing_info | fetch | Model gọi fetch thiếu URL thay vì hỏi clarify | Siết rule: bắt buộc clarify khi thiếu URL |
+| R12_confirm_before_send | wrong_boundary | send | Chưa có xác nhận rõ ràng nhưng model vẫn gọi send(confirmed=True) | Siết chặt prompt: chỉ send khi có từ khóa xác nhận cụ thể từ user |
+| R13_parallel_web_and_tweets | wrong_tool | lookup (thiếu social_search) | Không song song lookup+social_search; query của lookup cũng sai | Làm rõ routing: tin tức dùng lookup, tweet dùng social_search, có thể song song |
+| R14_out_of_scope_coding | out_of_scope | (no tool / wrong) | Câu hỏi lập trình ngoài phạm vi agent — model không từ chối | Siết scope rule: từ chối coding/chit-chat không liên quan |
 | M02_carryover_timeframe | wrong_arg_value | lookup | Model không mang theo timeframe từ lượt trước sang lượt sau | Thêm luật carry-over tham số trong prompt |
 
 ## B3. Team Eval Cases
@@ -90,14 +98,15 @@ Trợ lý nghiên cứu chuyên sâu đa tác vụ: tự động tìm kiếm th�
 |---|---|---|---|---|
 | 1 | "Tính giúp tôi 125 * 34" | `calculator` | `{"expression": "125 * 34"}` | Tính ra kết quả chính xác: 125 × 34 = **4,250** |
 | 2 | "Đọc giúp tôi bài viết tại link này" | `clarify` | `{"question": "Bạn muốn tôi đọc bài viết ở link nào? Vui lòng gửi đầy đủ địa chỉ URL...", "response_type": "text"}` | Kích hoạt ranh giới guardrail: không gọi fetch bừa mà hỏi xin URL |
-| 3 | "Gửi báo cáo lên Telegram" | `clarify` | `{"question": "...Bạn có chắc muốn tôi gửi báo cáo lên Telegram không?", "response_type": "yes_no"}` | Kích hoạt ranh giới xác nhận an toàn: yêu cầu người dùng xác nhận yes/no trước khi gọi send |
+| 3 | "Gửi báo cáo lên Telegram" | `clarify` | `{"question": "Bạn có chắc muốn tôi gửi báo cáo lên Telegram không?", "response_type": "yes_no"}` | Kích hoạt ranh giới xác nhận an toàn: yêu cầu người dùng xác nhận yes/no trước khi gọi send |
+| 4 | "Có, xác nhận gửi đi nhé" | `send` | `{"text": "...", "confirmed": true}` | Sau khi user xác nhận, agent gọi ngay send(confirmed=True) — không hỏi lại |
 
 ## B5. Bonus Evidence
 
 | Bonus | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
 | Tool mới `calculator` | `tools/calculator/tool.py` | Tính toán chính xác biểu thức số học | Chặn lệnh nguy hiểm (eval/exec/import) |
-| Tool unit tests | `tests/test_tools_todo.py` | 3/3 tests passed (happy, bad input, failure) | Đảm bảo code tool không làm sập agent |
+| Tool unit tests | `tests/test_tools_todo.py` | **84 passed, 0 skipped, 0 failed** — 14 TODO + 3 calculator + 67 contract/example | Đảm bảo code tool không làm sập agent |
 | Giao diện UI Streamlit | `app.py` | Giao diện tương tác trực quan thời gian thực | Dark mode, hiển thị chi tiết tool call |
 | Tích hợp Telegram Bot | `tools/send/tool.py` | Bắn báo cáo Markdown trực tiếp về bot @sdfjsijfsiod_bot | Guardrail: bắt buộc xác nhận người dùng trước khi gửi |
 | Cào Tweet thật qua RapidAPI | `tools/timeline/tool.py` | Lấy dữ liệu tweet thật của người dùng và từ khóa X/Twitter | Bóc tách ID và URL hợp lệ, giới hạn số lượng bài đăng |
