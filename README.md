@@ -58,20 +58,20 @@ Bonus:
 - [ ] `v1`, `v2`, `v3`: mỗi version **một** giả thuyết, metric trước/sau trong `version_log.csv`
 
 **Tool mới**
-- [ ] `tools/<tên>/tool.py` + `TOOL.md` (frontmatter đúng contract trong `tools/README.md`)
-- [ ] Đăng ký trong `tools/__init__.py` (`TOOL_FUNCTIONS`) và `artifacts/tools.yaml`
-- [ ] Unit test cho tool mới trong `tests/test_tools_todo.py` (≥ 3 test)
-- [ ] Ít nhất 1 eval case trong `data/eval_group.json` kiểm tra model có route tới tool mới đúng lúc
+- [x] 	ools/<tên>/tool.py + TOOL.md (frontmatter đúng contract trong 	ools/README.md)
+- [x] Đăng ký trong 	ools/__init__.py (TOOL_FUNCTIONS) và artifacts/tools.yaml
+- [x] Unit test cho tool mới trong 	ests/test_tools_todo.py (≥ 3 test)
+- [x] Ít nhất 1 eval case trong data/eval_group.json kiểm tra model có route tới tool mới đúng lúc
 
 **Testing**
-- [ ] `data/eval_group.json`: case cho model (routing / args / boundary), xem Step 4
-- [ ] `tests/test_tools_todo.py`: unit test cho code của tool, xem Step 4b
-- [ ] `pytest`: 0 failed, 0 skipped
+- [x] data/eval_group.json: case cho model (routing / args / boundary), xem Step 4
+- [x] 	ests/test_tools_todo.py: unit test cho code của tool, xem Step 4b
+- [x] pytest: 0 failed, 0 skipped
 
 **Demo & report**
-- [ ] UI chạy được + link dùng thử
-- [ ] `chat.py`: ≥ 3 lượt live, có transcript
-- [ ] `artifacts/REPORT.md` Phần A trước 16:30, Phần B trước khi nộp
+- [x] UI chạy được + link dùng thử
+- [x] chat.py: ≥ 3 lượt live, có transcript
+- [x] artifacts/REPORT.md Phần A trước 16:30, Phần B trước khi nộp
 
 **Bonus (tuỳ chọn)**
 - [ ] `send` có xác nhận trước khi gửi, có transcript chứng minh

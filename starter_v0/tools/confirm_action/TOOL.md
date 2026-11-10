@@ -3,8 +3,8 @@ name: confirm_action
 track: core
 kind: control
 requires_env: []
-inputs: [action, details]
-outputs: [tool, action, details, awaiting_user]
+inputs: [action, details, question]
+outputs: [tool, action, details, question, awaiting_user]
 side_effect: false
 ---
 # confirm_action

@@ -8,16 +8,17 @@ import yaml
 # Folder names are intentionally vague to match the tool names students see.
 # The imported function names are the underlying implementations (unchanged).
 from .clarify.tool import ask_user
-from .papers.tool import arxiv_search
-from .paper_text.tool import get_arxiv_paper_text
-from .timeline.tool import get_user_tweets
+from .confirm_action.tool import confirm_action
 from .fetch.tool import read_url
 from .format.tool import render_digest
-from .policy.tool import search_company_policy
-from .social_search.tool import search_tweets
-from .send.tool import send_telegram
 from .lookup.tool import web_search
-
+from .normalize_handle.tool import normalize_handle
+from .paper_text.tool import get_arxiv_paper_text
+from .papers.tool import arxiv_search
+from .policy.tool import search_company_policy
+from .send.tool import send_telegram
+from .social_search.tool import search_tweets
+from .timeline.tool import get_user_tweets
 
 # NOTE (starter_v0): tool names here are intentionally vague. These keys are the
 # names the model sees AND the names data/eval_base.json + data/eval_research_extension.json
@@ -35,8 +36,8 @@ TOOL_FUNCTIONS = {
     "policy": search_company_policy,
     "papers": arxiv_search,
     "paper_text": get_arxiv_paper_text,
-    # TODO(student): register your new tool here, e.g. "my_tool": my_tool_function,
-    # then declare it in artifacts/tools.yaml and run `pytest tests/test_tool_contract.py`.
+    "confirm_action": confirm_action,
+    "normalize_handle": normalize_handle,
 }
 
 
@@ -53,4 +54,3 @@ def to_openai_tools(declarations: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "parameters": item.get("parameters", {"type": "object", "properties": {}}),
         },
     } for item in declarations]
-

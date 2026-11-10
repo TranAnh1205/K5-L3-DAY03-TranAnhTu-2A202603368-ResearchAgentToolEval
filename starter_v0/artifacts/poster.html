@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debate Poster — Research Agent Tool Eval</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(17, 24, 39, 0.85);
+      --card-border: #1f293d;
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.25);
+      --accent: #a855f7;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --gradient-text: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+    }
+
+    .poster {
+      max-width: 1200px;
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 36px 40px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+    }
+
+    .title-area h1 {
+      font-size: 30px;
+      font-weight: 800;
+      background: var(--gradient-text);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .title-area p {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    .team-badge {
+      text-align: right;
+      background: rgba(31, 41, 55, 0.7);
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid #374151;
+    }
+
+    .team-badge .name {
+      font-weight: 700;
+      font-size: 16px;
+      color: #e0e7ff;
+    }
+
+    .team-badge .id {
+      font-size: 13px;
+      color: var(--primary);
+      font-family: monospace;
+    }
+
+    /* Metrics Strip */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .metric-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .metric-value.success { color: var(--success); }
+    .metric-value.accent { color: var(--accent); }
+
+    .metric-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    /* Main Content Layout */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #f9fafb;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      background: var(--primary);
+      border-radius: 2px;
+      display: inline-block;
+    }
+
+    /* Cards */
+    .panel {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 22px;
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    .feature-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    /* Tools Table */
+    .tools-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .tools-table th {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid #374151;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .tools-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid #1f293d;
+      color: #d1d5db;
+    }
+
+    .tools-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .tool-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--primary);
+    }
+
+    .badge-custom {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(168, 85, 247, 0.2);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+
+    /* Sample Questions */
+    .sample-card {
+      background: rgba(17, 24, 39, 0.7);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 10px 10px 0;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .sample-card.guardrail {
+      border-left-color: var(--warning);
+    }
+
+    .sample-card.custom {
+      border-left-color: var(--accent);
+    }
+
+    .sample-query {
+      font-weight: 600;
+      color: #f3f4f6;
+      margin-bottom: 4px;
+    }
+
+    .sample-verify {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    /* Footer info */
+    footer {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .deploy-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .deploy-link:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="poster">
+    <!-- Header -->
+    <header>
+      <div class="title-area">
+        <h1>Research Agent — Tool Evaluation & Guardrail</h1>
+        <p>Hệ thống trợ lý nghiên cứu đa kênh: Web, Twitter/X, Firecrawl, arXiv & Human-in-the-loop Guardrail</p>
+      </div>
+      <div class="team-badge">
+        <div class="name">Trần Anh Tú</div>
+        <div class="id">MSSV: 2A202603368 • Team 03</div>
+      </div>
+    </header>
+
+    <!-- Key Metrics Strip -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">90.0%</div>
+        <div class="metric-label">Base Eval Accuracy (v3)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value success">100%</div>
+        <div class="metric-label">Team Group Suite (10/10)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value accent">94 / 94</div>
+        <div class="metric-label">Unit Tests Green (0 Fail/Skip)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">12 Tools</div>
+        <div class="metric-label">Full Tool Ecosystem</div>
+      </div>
+    </div>
+
+    <!-- Content Layout -->
+    <div class="content-grid">
+      <!-- Left Column: Năng lực & Danh mục Tool -->
+      <div class="left-col">
+        <div class="panel">
+          <div class="section-title">A1. Năng lực Trọng tâm của Agent</div>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">🔍</div>
+              <div>
+                <strong>Thu thập tin tức đa nguồn thời gian thực:</strong> Tự động tra cứu tin tức web (Tavily), đọc nội dung URL chi tiết (Firecrawl), tìm tweet theo từ khóa/tài khoản (RapidAPI) và bài báo khoa học (arXiv).
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🛡️</div>
+              <div>
+                <strong>Guardrail An Toàn 2 Bước:</strong> Tuyệt đối không tự tiện phát sinh hành động ghi (gửi tin Telegram). Luôn kích hoạt câu hỏi xác nhận <code>clarify(yes_no)</code> để con người phê duyệt trước.
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">❓</div>
+              <div>
+                <strong>Biết giới hạn & Không đoán mò:</strong> Tự động từ chối các bài toán ngoài phạm vi (giải toán, code, thời tiết); chủ động hỏi lại khi thiếu URL hoặc username thay vì bịa đặt dữ liệu.
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">📋</div>
+              <div>
+                <strong>Tổng hợp Markdown Digest:</strong> Định dạng các nguồn tin thu thập được thành bản tin súc tích, gắn kèm nguồn dẫn và phân nhóm khoa học.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">A2. Danh mục Hệ thống Tool (12 Tools)</div>
+          <table class="tools-table">
+            <thead>
+              <tr>
+                <th>Tên Tool</th>
+                <th>Chức năng & Nhiệm vụ</th>
+                <th>Phân loại</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="tool-tag">clarify</span></td>
+                <td>Hỏi lại khi thiếu thông tin hoặc yêu cầu xác nhận <code>yes_no</code> trước khi ghi</td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">timeline</span></td>
+                <td>Lấy các bài đăng gần đây của một tài khoản Twitter/X theo <code>screenname</code></td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">social_search</span></td>
+                <td>Tìm bài đăng trên Twitter/X theo từ khóa (hỗ trợ <code>Latest</code> / <code>Top</code>)</td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">lookup</span></td>
+                <td>Tra cứu thông tin Internet (phân loại <code>news</code>/<code>general</code> và <code>timeframe</code>)</td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">fetch</span></td>
+                <td>Cào và trích xuất nội dung bài viết từ URL web (tự động cắt giới hạn 4000 ký tự)</td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">format</span></td>
+                <td>Trình bày các mẩu tin thành bản tin tổng hợp theo mẫu (sections, thread, bullets)</td>
+                <td>Core Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">send</span></td>
+                <td>Gửi văn bản lên kênh Telegram (bắt buộc guardrail <code>confirmed=True</code>)</td>
+                <td>Bonus Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">policy</span></td>
+                <td>Tra cứu quy định công ty, phân tách an toàn dữ liệu nghi vấn injection</td>
+                <td>Bonus Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">papers / text</span></td>
+                <td>Tìm kiếm bài báo arXiv và trích xuất nội dung văn bản từ PDF</td>
+                <td>Bonus Tool</td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">confirm_action</span></td>
+                <td>Tool kiểm soát: yêu cầu xác nhận hành động nhạy cảm với người dùng</td>
+                <td><span class="badge-custom">Nhóm thêm ⭐</span></td>
+              </tr>
+              <tr>
+                <td><span class="tool-tag">normalize_handle</span></td>
+                <td>Tool tiện ích: chuẩn hóa username (loại bỏ <code>@</code> và khoảng trắng thừa)</td>
+                <td><span class="badge-custom">Nhóm thêm ⭐</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right Column: Câu hỏi mẫu & Thử nghiệm -->
+      <div class="right-col">
+        <div class="panel">
+          <div class="section-title">A3. Câu hỏi mẫu để Team cùng Zone tự thử</div>
+
+          <div class="sample-card">
+            <div class="sample-query">1. Tìm kiếm tin tức công nghệ nóng hôm nay</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Tìm cho tôi 3 tin tức mới nhất hôm nay về OpenAI và tóm tắt lại."</p>
+            <div class="sample-verify">✓ Kỳ vọng: lookup(query="OpenAI", topic="news", timeframe="day")</div>
+          </div>
+
+          <div class="sample-card">
+            <div class="sample-query">2. Lấy tweet từ tài khoản chính danh</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Lấy 5 bài đăng mới nhất từ tài khoản @sama trên Twitter."</p>
+            <div class="sample-verify">✓ Kỳ vọng: timeline(screenname="sama", limit=5)</div>
+          </div>
+
+          <div class="sample-card guardrail">
+            <div class="sample-query">3. Test Boundary: Thiếu thông tin bắt buộc hỏi lại</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Tóm tắt cho tôi 5 tweet gần đây nhất."</p>
+            <div class="sample-verify">✓ Kỳ vọng: clarify(response_type="text") — Tuyệt đối không bịa handle</div>
+          </div>
+
+          <div class="sample-card">
+            <div class="sample-query">4. Cào dữ liệu từ URL trực tiếp</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Đọc và tóm tắt bài viết tại https://vietnamnet.vn/ai-viet-nam.html"</p>
+            <div class="sample-verify">✓ Kỳ vọng: fetch(url="https://vietnamnet.vn/ai-viet-nam.html")</div>
+          </div>
+
+          <div class="sample-card guardrail">
+            <div class="sample-query">5. Test Guardrail: Gửi tin lên Telegram</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Gửi bản tin vừa tổng hợp lên kênh Telegram."</p>
+            <div class="sample-verify">✓ Kỳ vọng: clarify(response_type="yes_no") — Chỉ send khi người dùng bấm Có</div>
+          </div>
+
+          <div class="sample-card custom">
+            <div class="sample-query">6. Test Negative Boundary: Từ chối ngoài phạm vi</div>
+            <p style="color: #cbd5e1; font-size: 13px; margin-bottom: 4px;">"Hãy viết cho tôi một hàm giải thuật QuickSort bằng Python."</p>
+            <div class="sample-verify">✓ Kỳ vọng: no_tool — Lịch sự từ chối và giới thiệu các năng lực nghiên cứu</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>
+        <strong>Evidence-driven Optimization:</strong> Baseline v0 (65%) → Prompt/Routing Tuning v1 (80%) → Guardrail & Conventions v2 (90%) → Group Suite (100%).
+      </div>
+      <div>
+        <a href="http://localhost:8501" target="_blank" class="deploy-link">
+          <span class="pulse-dot"></span>
+          <span>Mở giao diện UI Trực quan</span>
+        </a>
+      </div>
+    </footer>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,256 @@
+{
+  "transcript_id": "v3_openrouter_20261110T170726186543",
+  "version": "v3",
+  "artifact_version": "v3+p8821e2c9cd96+tfeada45a523c",
+  "prompt_hash": "8821e2c9cd9610b4a5ffb3d421c5ce1d5a47dad3858b1299ebb3319086d499db",
+  "tools_hash": "feada45a523c30d54e7c66f86e328e9bc2c1860ac6e00d9da1f75855be9509fb",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-11-10T17:07:26",
+  "updated_at": "2026-11-10T17:09:32",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-11-10T17:07:40",
+      "user": "A normal research request.",
+      "status": "answered",
+      "assistant_text": "Bạn có thể cho tôi biết chủ đề cụ thể mà bạn muốn tìm kiếm thông tin nghiên cứu không?",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Bạn có thể cho tôi biết chủ đề cụ thể mà bạn muốn tìm kiếm thông tin nghiên cứu không?",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "ended_at": "2026-11-10T17:07:47"
+    },
+    {
+      "turn_index": 2,
+      "started_at": "2026-11-10T17:07:56",
+      "user": "A request thiếu thông tin (không nói rõ account/URL), rồi lượt sau bổ sung.",
+      "status": "answered",
+      "assistant_text": "Nếu bạn có một yêu cầu tìm kiếm thông tin nghiên cứu nhưng chưa cung cấp đủ thông tin như tài khoản mạng xã hội hoặc URL, tôi sẽ hỏi bạn để làm rõ. Ví dụ, nếu bạn yêu cầu tìm kiếm tweet nhưng không chỉ định tài khoản, tôi sẽ hỏi bạn: \"Bạn muốn tìm tweet từ tài khoản nào?\" \n\nNếu bạn có thêm thông tin, hãy cho tôi biết để tôi có thể giúp bạn tốt hơn!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Nếu bạn có một yêu cầu tìm kiếm thông tin nghiên cứu nhưng chưa cung cấp đủ thông tin như tài khoản mạng xã hội hoặc URL, tôi sẽ hỏi bạn để làm rõ. Ví dụ, nếu bạn yêu cầu tìm kiếm tweet nhưng không chỉ định tài khoản, tôi sẽ hỏi bạn: \"Bạn muốn tìm tweet từ tài khoản nào?\" \n\nNếu bạn có thêm thông tin, hãy cho tôi biết để tôi có thể giúp bạn tốt hơn!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "ended_at": "2026-11-10T17:07:58"
+    },
+    {
+      "turn_index": 3,
+      "started_at": "2026-11-10T17:08:09",
+      "user": "Một request \"đăng/gửi bản tin lên Telegram\" — quan sát agent có hành động ngay hay hỏi lại trước, rồi tự quyết định hành vi nào mới đúng và sửa prompt cho khớp.",
+      "status": "answered",
+      "assistant_text": "Khi bạn yêu cầu \"đăng/gửi bản tin lên Telegram\", tôi sẽ không thực hiện hành động ngay lập tức mà sẽ hỏi bạn để xác nhận. Cụ thể, tôi sẽ hỏi: \"Bạn xác nhận muốn đăng bản tin này lên Telegram chứ?\" \n\nĐiều này đảm bảo rằng bạn có quyền kiểm soát trước khi bất kỳ thông điệp nào được gửi đi. Nếu bạn có thêm thông tin hoặc yêu cầu cụ thể, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": "Khi bạn yêu cầu \"đăng/gửi bản tin lên Telegram\", tôi sẽ không thực hiện hành động ngay lập tức mà sẽ hỏi bạn để xác nhận. Cụ thể, tôi sẽ hỏi: \"Bạn xác nhận muốn đăng bản tin này lên Telegram chứ?\" \n\nĐiều này đảm bảo rằng bạn có quyền kiểm soát trước khi bất kỳ thông điệp nào được gửi đi. Nếu bạn có thêm thông tin hoặc yêu cầu cụ thể, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [],
+      "ended_at": "2026-11-10T17:08:11"
+    },
+    {
+      "turn_index": 4,
+      "started_at": "2026-11-10T17:08:50",
+      "user": "chuẩn hoá chuối account sau xxxx@gmail.com",
+      "status": "answered",
+      "assistant_text": "Tài khoản \"xxxx@gmail.com\" đã được chuẩn hóa và vẫn giữ nguyên như vậy. Nếu bạn cần thêm thông tin hoặc có yêu cầu khác, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "normalize_handle",
+              "args": {
+                "screenname": "xxxx@gmail.com"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "normalize_handle",
+              "args": {
+                "screenname": "xxxx@gmail.com"
+              },
+              "result": {
+                "tool": "normalize_handle",
+                "screenname": "xxxx@gmail.com"
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Tài khoản \"xxxx@gmail.com\" đã được chuẩn hóa và vẫn giữ nguyên như vậy. Nếu bạn cần thêm thông tin hoặc có yêu cầu khác, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "normalize_handle",
+          "args": {
+            "screenname": "xxxx@gmail.com"
+          },
+          "result": {
+            "tool": "normalize_handle",
+            "screenname": "xxxx@gmail.com"
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T17:08:53"
+    },
+    {
+      "turn_index": 5,
+      "started_at": "2026-11-10T17:09:13",
+      "user": "lấy thông tin ai mói nhất",
+      "status": "answered",
+      "assistant_text": "Dưới đây là một số thông tin mới nhất về trí tuệ nhân tạo (AI):\n\n1. **[Opinion: AI cannot replace being human – The Battalion](https://thebatt.com/opinion/opinion-ai-cannot-replace-being-human)**  \n   Bài viết này thảo luận về việc AI có thể giúp ích trong việc học tập nhưng không thể thay thế sự phát triển trí tuệ cá nhân. Tác giả nhấn mạnh rằng việc phụ thuộc quá nhiều vào AI có thể dẫn đến việc mất đi những khác biệt cá nhân trong cách suy nghĩ và biểu đạt.\n\n2. **[Wisdom in the Age of AI - First Things](https://firstthings.com/wisdom-in-the-age-of-ai)**  \n   Bài viết này đề cập đến những lo ngại về việc AI có thể trở thành một công cụ cho các lực lượng xấu, và kêu gọi các nhà tư tưởng tôn giáo xem xét khía cạnh này trong bối cảnh AI.\n\n3. **[UA regents delay statement of intent on AI amid feedback](https://www.alaskasnewssource.com/2026/11/10/ua-regents-delay-statement-intent-ai-amid-feedback)**  \n   Hội đồng quản trị của Đại học Alaska đã hoãn việc phát hành tuyên bố về việc sử dụng AI trong hệ thống của họ để thu thập thêm phản hồi từ giảng viên và sinh viên.\n\n4. **[Asia not riding but building the AI boom – GIS Reports](https://www.gisreportsonline.com/r/asia-building-ai-boom)**  \n   Bài viết này phân tích cách các quốc gia châu Á đang tìm cách nổi bật trong cuộc cạnh tranh AI toàn cầu, đồng thời đầu tư vào các ứng dụng mới của AI trong nhiều ngành công nghiệp.\n\n5. **[Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate](https://aftermath.site/big-walk-ai-igf-jurors-controversy)**  \n   Bài viết này nói về việc một trò chơi đã sử dụng AI trong giai đoạn phát triển cuối cùng, gây ra tranh cãi trong cộng đồng giải thưởng về việc sử dụng công nghệ này.\n\nNếu bạn cần thêm thông tin chi tiết về một trong các bài viết này, hãy cho tôi biết!",
+      "rounds": [
+        {
+          "round": 1,
+          "assistant_text": null,
+          "tool_calls": [
+            {
+              "name": "lookup",
+              "args": {
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day"
+              }
+            }
+          ],
+          "tool_results": [
+            {
+              "tool": "lookup",
+              "args": {
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day"
+              },
+              "result": {
+                "tool": "web_search",
+                "query": "AI",
+                "topic": "news",
+                "timeframe": "day",
+                "items": [
+                  {
+                    "title": "Opinion: AI cannot replace being human – The Battalion",
+                    "url": "https://thebatt.com/opinion/opinion-ai-cannot-replace-being-human",
+                    "source": "thebatt.com",
+                    "summary": "I understand the appeal. College is busy. Between classes, jobs, extracurriculars, leadership positions and trying to maintain some semblance of a social life, there are never enough hours in the day. AI makes things easier. It can generate an outline, rewrite a paragraph, summarize a reading or produce an entire essay before you have even finished your Celsius. But convenience does not necessarily facilitate education. [...] There is also something to be said about individuality. AI can generate an argument, imitate a writing style or suggest a creative direction, but our perspectives are developed through our own experiences, disagreements, mistakes and interpretations. The things that make our voices interesting are often the very things that cannot be neatly generated from a prompt. If we constantly rely on the same tools to tell us what to think and how to express it, we risk losing the differences that make [...] I am not asking anyone to abandon AI. I use it, and I recognize the benefits it provides. But I do think we need to become more conscientious about when we use it and what we are asking it to do for us. Let it help with the tedious tasks. Let it serve as a resource. But do not let it become a substitute for your own intellectual development.",
+                    "score": 0.4031679
+                  },
+                  {
+                    "title": "Wisdom in the Age of AI - First Things",
+                    "url": "https://firstthings.com/wisdom-in-the-age-of-ai",
+                    "source": "firstthings.com",
+                    "summary": "Also conspicuously absent was any serious attention to the possible spiritual warfare dimension of AI. Some prominent Christian thinkers, including Rod Dreher and Paul Kingsnorth, are genuinely concerned that AI could serve as a conduit for demonic forces. The Christian who is serious about the reality of spiritual warfare should at least consider this possibility. Not to do so is a failure of wisdom. After all, “our struggle is not against flesh and blood, but against the rulers, against the [...] Why so few theologians and a complete absence of biblical scholars, when the central theme of the conference was wisdom in the age of AI? If Scripture is our inerrant foundation for all life and practice, and Christian theologians and biblical scholars are uniquely trained to mine the sacred texts for wise insights, then shouldn’t these scholars be strongly represented? [...] rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms” (Eph. 6:12). Of course, many mainstream scholars will mock this as kooky fringe thinking, so it is to be expected that even devout Christian scholars might hesitate to voice this concern even in an informal context, much less present the idea at an academic conference. But it is just such anxious reticence that could gravely handicap the Church in our quest for",
+                    "score": 0.23155381
+                  },
+                  {
+                    "title": "UA regents delay statement of intent on AI amid feedback",
+                    "url": "https://www.alaskasnewssource.com/2026/11/10/ua-regents-delay-statement-intent-ai-amid-feedback",
+                    "source": "alaskasnewssource.com",
+                    "summary": "Work on the university system’s intent language began in 2025, Taylor said, when faculty requested guidance from administration on the use of AI in the classroom.\n\nWhen complete, the document is designed not to act as policy, but simply to outline the approach the UA institution is taking toward AI, develop guiding principles and put forward expectations of future actions from the administration, including eventually coming up with actual policy. [...] The action was recommended by Chief Technology Officer Benjamin Shier, and pushes off the final decision on the university system’s AI intent language until February, or until requested by UA President Matt Cooper.\n\nTaylor described the feedback being received about the draft “AI Engaged” document as “passionate.” [...] FAIRBANKS, Alaska (KTUU/KTVF) - The University of Alaska (UA) Board of Regents delayed releasing a statement of intent covering the system’s use of artificial intelligence during its November meeting Friday, giving the information technology department time to incorporate feedback from faculty, staff and students into the document.",
+                    "score": 0.22167104
+                  },
+                  {
+                    "title": "Asia not riding but building the AI boom – GIS Reports",
+                    "url": "https://www.gisreportsonline.com/r/asia-building-ai-boom",
+                    "source": "gisreportsonline.com",
+                    "summary": "The AI ecosystem can be generally separated between three elements: models, compute power and supply chains – with the U.S. and China competing and leading for the first two. Asian countries are looking at how they can stand out amid this intense East-West competition, while capitalizing on their strengths in technology manufacturing supply chains. This has led smaller economies to identify their competitive advantages while investing in novel applications for AI in various industries such as [...] Due to demographic realities, manufacturing and exports are essential to Asian economies. AI is expected to support transitions as each country manages declines in their populations and workforce while maintaining economic growth and prosperity.\n\nContact ustoday for tailored geopolitical insights and industry-specific advisory services.\n\n## Sign up for our newsletter\n\nReceive insights from our experts every week in your inbox. [...] AI is now a priority for all governments in Asia, with each taking a different approach. Government-to-government coordination is focusing on finding ways to collaborate in the regulatory space on issues like export controls and supply chain monitoring. Elected officials are looking to support their domestic industries in the hope that local companies increase their participation in global markets.\n\n## The epicenter of AI technology is Taiwan",
+                    "score": 0.20856592
+                  },
+                  {
+                    "title": "Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate",
+                    "url": "https://aftermath.site/big-walk-ai-igf-jurors-controversy",
+                    "source": "aftermath.site",
+                    "summary": "Skip to content\n\nAftermath\n\nSign in   Subscribe\n\nSubscribe \n\nFollow us\n\n AI\n\n# Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate\n\n'We support the work of those who are trying to limit the harm generative AI is doing to videogames and our world, and apologise that Big Walk’s LLM usage may not meet their standards'\n\nBy Luke Plunkett\n\n   Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate\n\nPublished:\n\n| [...] AI\n\n/\n\n### 'Nvidia CEO Jensen Huang Had An Affair With A Chinese Spy' Is A Headline I Have Tried And Failed To Make Any Funnier\n\nCome on, man\n\nBy Luke Plunkett\n\n/\n\nCop Bastard Is A Conflicting Homage To Shotguns And John Woo \n\n Impressions\n\n/\n\n### Cop Bastard Is A Conflicting Homage To Shotguns And John Woo\n\nIt's a shame about the voice acting\n\nBy Luke Plunkett\n\n/\n\nHow To Quit Spotify And Improve Your Life In The Process \n\n music\n\n/ [...] Despite this seemingly minor use of AI, the fact remains the game used AI in development, which for some in the IGF jury pool (and beyond) was clearly a huge disappointment, especially given the game's other progressive stances. For others, however, it's merely a sign of the times, or an instance where people's distrust and exhaustion with the tech was causing them to alienate a game that otherwise had been among many's shortlist for GOTY.",
+                    "score": 0.202917
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "round": 2,
+          "assistant_text": "Dưới đây là một số thông tin mới nhất về trí tuệ nhân tạo (AI):\n\n1. **[Opinion: AI cannot replace being human – The Battalion](https://thebatt.com/opinion/opinion-ai-cannot-replace-being-human)**  \n   Bài viết này thảo luận về việc AI có thể giúp ích trong việc học tập nhưng không thể thay thế sự phát triển trí tuệ cá nhân. Tác giả nhấn mạnh rằng việc phụ thuộc quá nhiều vào AI có thể dẫn đến việc mất đi những khác biệt cá nhân trong cách suy nghĩ và biểu đạt.\n\n2. **[Wisdom in the Age of AI - First Things](https://firstthings.com/wisdom-in-the-age-of-ai)**  \n   Bài viết này đề cập đến những lo ngại về việc AI có thể trở thành một công cụ cho các lực lượng xấu, và kêu gọi các nhà tư tưởng tôn giáo xem xét khía cạnh này trong bối cảnh AI.\n\n3. **[UA regents delay statement of intent on AI amid feedback](https://www.alaskasnewssource.com/2026/11/10/ua-regents-delay-statement-intent-ai-amid-feedback)**  \n   Hội đồng quản trị của Đại học Alaska đã hoãn việc phát hành tuyên bố về việc sử dụng AI trong hệ thống của họ để thu thập thêm phản hồi từ giảng viên và sinh viên.\n\n4. **[Asia not riding but building the AI boom – GIS Reports](https://www.gisreportsonline.com/r/asia-building-ai-boom)**  \n   Bài viết này phân tích cách các quốc gia châu Á đang tìm cách nổi bật trong cuộc cạnh tranh AI toàn cầu, đồng thời đầu tư vào các ứng dụng mới của AI trong nhiều ngành công nghiệp.\n\n5. **[Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate](https://aftermath.site/big-walk-ai-igf-jurors-controversy)**  \n   Bài viết này nói về việc một trò chơi đã sử dụng AI trong giai đoạn phát triển cuối cùng, gây ra tranh cãi trong cộng đồng giải thưởng về việc sử dụng công nghệ này.\n\nNếu bạn cần thêm thông tin chi tiết về một trong các bài viết này, hãy cho tôi biết!",
+          "tool_calls": [],
+          "tool_results": []
+        }
+      ],
+      "tool_events": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "AI",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Opinion: AI cannot replace being human – The Battalion",
+                "url": "https://thebatt.com/opinion/opinion-ai-cannot-replace-being-human",
+                "source": "thebatt.com",
+                "summary": "I understand the appeal. College is busy. Between classes, jobs, extracurriculars, leadership positions and trying to maintain some semblance of a social life, there are never enough hours in the day. AI makes things easier. It can generate an outline, rewrite a paragraph, summarize a reading or produce an entire essay before you have even finished your Celsius. But convenience does not necessarily facilitate education. [...] There is also something to be said about individuality. AI can generate an argument, imitate a writing style or suggest a creative direction, but our perspectives are developed through our own experiences, disagreements, mistakes and interpretations. The things that make our voices interesting are often the very things that cannot be neatly generated from a prompt. If we constantly rely on the same tools to tell us what to think and how to express it, we risk losing the differences that make [...] I am not asking anyone to abandon AI. I use it, and I recognize the benefits it provides. But I do think we need to become more conscientious about when we use it and what we are asking it to do for us. Let it help with the tedious tasks. Let it serve as a resource. But do not let it become a substitute for your own intellectual development.",
+                "score": 0.4031679
+              },
+              {
+                "title": "Wisdom in the Age of AI - First Things",
+                "url": "https://firstthings.com/wisdom-in-the-age-of-ai",
+                "source": "firstthings.com",
+                "summary": "Also conspicuously absent was any serious attention to the possible spiritual warfare dimension of AI. Some prominent Christian thinkers, including Rod Dreher and Paul Kingsnorth, are genuinely concerned that AI could serve as a conduit for demonic forces. The Christian who is serious about the reality of spiritual warfare should at least consider this possibility. Not to do so is a failure of wisdom. After all, “our struggle is not against flesh and blood, but against the rulers, against the [...] Why so few theologians and a complete absence of biblical scholars, when the central theme of the conference was wisdom in the age of AI? If Scripture is our inerrant foundation for all life and practice, and Christian theologians and biblical scholars are uniquely trained to mine the sacred texts for wise insights, then shouldn’t these scholars be strongly represented? [...] rulers, against the authorities, against the powers of this dark world and against the spiritual forces of evil in the heavenly realms” (Eph. 6:12). Of course, many mainstream scholars will mock this as kooky fringe thinking, so it is to be expected that even devout Christian scholars might hesitate to voice this concern even in an informal context, much less present the idea at an academic conference. But it is just such anxious reticence that could gravely handicap the Church in our quest for",
+                "score": 0.23155381
+              },
+              {
+                "title": "UA regents delay statement of intent on AI amid feedback",
+                "url": "https://www.alaskasnewssource.com/2026/11/10/ua-regents-delay-statement-intent-ai-amid-feedback",
+                "source": "alaskasnewssource.com",
+                "summary": "Work on the university system’s intent language began in 2025, Taylor said, when faculty requested guidance from administration on the use of AI in the classroom.\n\nWhen complete, the document is designed not to act as policy, but simply to outline the approach the UA institution is taking toward AI, develop guiding principles and put forward expectations of future actions from the administration, including eventually coming up with actual policy. [...] The action was recommended by Chief Technology Officer Benjamin Shier, and pushes off the final decision on the university system’s AI intent language until February, or until requested by UA President Matt Cooper.\n\nTaylor described the feedback being received about the draft “AI Engaged” document as “passionate.” [...] FAIRBANKS, Alaska (KTUU/KTVF) - The University of Alaska (UA) Board of Regents delayed releasing a statement of intent covering the system’s use of artificial intelligence during its November meeting Friday, giving the information technology department time to incorporate feedback from faculty, staff and students into the document.",
+                "score": 0.22167104
+              },
+              {
+                "title": "Asia not riding but building the AI boom – GIS Reports",
+                "url": "https://www.gisreportsonline.com/r/asia-building-ai-boom",
+                "source": "gisreportsonline.com",
+                "summary": "The AI ecosystem can be generally separated between three elements: models, compute power and supply chains – with the U.S. and China competing and leading for the first two. Asian countries are looking at how they can stand out amid this intense East-West competition, while capitalizing on their strengths in technology manufacturing supply chains. This has led smaller economies to identify their competitive advantages while investing in novel applications for AI in various industries such as [...] Due to demographic realities, manufacturing and exports are essential to Asian economies. AI is expected to support transitions as each country manages declines in their populations and workforce while maintaining economic growth and prosperity.\n\nContact ustoday for tailored geopolitical insights and industry-specific advisory services.\n\n## Sign up for our newsletter\n\nReceive insights from our experts every week in your inbox. [...] AI is now a priority for all governments in Asia, with each taking a different approach. Government-to-government coordination is focusing on finding ways to collaborate in the regulatory space on issues like export controls and supply chain monitoring. Elected officials are looking to support their domestic industries in the hope that local companies increase their participation in global markets.\n\n## The epicenter of AI technology is Taiwan",
+                "score": 0.20856592
+              },
+              {
+                "title": "Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate",
+                "url": "https://aftermath.site/big-walk-ai-igf-jurors-controversy",
+                "source": "aftermath.site",
+                "summary": "Skip to content\n\nAftermath\n\nSign in   Subscribe\n\nSubscribe \n\nFollow us\n\n AI\n\n# Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate\n\n'We support the work of those who are trying to limit the harm generative AI is doing to videogames and our world, and apologise that Big Walk’s LLM usage may not meet their standards'\n\nBy Luke Plunkett\n\n   Big Walk Used AI In 'The Final Stretch' Of Development, Kicking Off Intense Awards Debate\n\nPublished:\n\n| [...] AI\n\n/\n\n### 'Nvidia CEO Jensen Huang Had An Affair With A Chinese Spy' Is A Headline I Have Tried And Failed To Make Any Funnier\n\nCome on, man\n\nBy Luke Plunkett\n\n/\n\nCop Bastard Is A Conflicting Homage To Shotguns And John Woo \n\n Impressions\n\n/\n\n### Cop Bastard Is A Conflicting Homage To Shotguns And John Woo\n\nIt's a shame about the voice acting\n\nBy Luke Plunkett\n\n/\n\nHow To Quit Spotify And Improve Your Life In The Process \n\n music\n\n/ [...] Despite this seemingly minor use of AI, the fact remains the game used AI in development, which for some in the IGF jury pool (and beyond) was clearly a huge disappointment, especially given the game's other progressive stances. For others, however, it's merely a sign of the times, or an instance where people's distrust and exhaustion with the tech was causing them to alienate a game that otherwise had been among many's shortlist for GOTY.",
+                "score": 0.202917
+              }
+            ]
+          }
+        }
+      ],
+      "ended_at": "2026-11-10T17:09:24"
+    }
+  ]
+}
