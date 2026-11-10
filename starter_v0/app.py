@@ -7,8 +7,9 @@ from pathlib import Path
 
 import streamlit as st
 
-from chat import run_model_tool_loop, trim_history
+from chat import execute_tool_call, run_model_tool_loop, trim_history
 from env_loader import load_lab_env
+from providers.base import ToolCall
 from providers import make_provider
 from tools import load_tool_declarations, to_openai_tools
 from versioning import build_artifact_version
@@ -73,26 +74,43 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "history" not in st.session_state:
     st.session_state.history = []
+if "pending_send" not in st.session_state:
+    st.session_state.pending_send = None
 
 artifact = build_artifact_version("demo", PROMPT_PATH, TOOLS_PATH)
+declarations = load_tool_declarations(TOOLS_PATH)
+tool_names = [tool["name"] for tool in declarations]
+tool_requirements = {
+    "timeline": ("RAPIDAPI_KEY",),
+    "social_search": ("RAPIDAPI_KEY",),
+    "lookup": ("TAVILY_API_KEY",),
+    "fetch": ("FIRECRAWL_API_KEY",),
+    "send": ("TELEGRAM_BOT_TOKEN", "TELEGRAM_CHAT_ID"),
+}
 with st.sidebar:
     st.markdown("### 🔎 Research Agent")
     st.caption("DAY 03 · LOCAL DEMO")
     st.divider()
     st.markdown("**Trạng thái**")
     if os.getenv("OPENAI_API_KEY"):
-        st.markdown('<span class="status-ok">● OpenAI đã kết nối</span>', unsafe_allow_html=True)
+        st.markdown('<span class="status-ok">● OpenAI API key đã cấu hình</span>', unsafe_allow_html=True)
     else:
         st.markdown('<span class="status-warn">● Thiếu OpenAI API key</span>', unsafe_allow_html=True)
     model = st.text_input("Model", value="gpt-4o-mini", help="Tên model OpenAI dùng cho cuộc trò chuyện.")
     st.caption(f"Phiên bản: `{artifact.artifact_version}`")
     st.divider()
     st.markdown("**Có thể thử**")
-    st.caption("Tin tức trên web · X/Twitter · Đọc URL · Gộp nguồn trùng")
-    st.info("Gửi Telegram chưa bật trong bản demo này.", icon="🔒")
+    st.caption("Tin tức trên web · X/Twitter · Đọc URL · arXiv · Policy · Gộp nguồn · Telegram")
+    with st.expander(f"{len(tool_names)} công cụ đã khai báo"):
+        st.caption("Dấu ✓ nghĩa là đã có cấu hình cần thiết; quyền API và quota được kiểm tra khi chạy.")
+        for name in tool_names:
+            missing = [key for key in tool_requirements.get(name, ()) if not os.getenv(key)]
+            st.caption(f"{'⚠️' if missing else '✓'} `{name}`" + (f" · thiếu {', '.join(missing)}" if missing else ""))
+    st.info("Telegram luôn cần bạn xác nhận bằng nút trước khi gửi thật.", icon="🔒")
     if st.button("↺  Bắt đầu cuộc trò chuyện mới", use_container_width=True):
         st.session_state.messages = []
         st.session_state.history = []
+        st.session_state.pending_send = None
         st.rerun()
 
 st.markdown(
@@ -154,7 +172,33 @@ for item in st.session_state.messages:
         st.markdown(item["content"])
         show_tool_events(item.get("tool_events", []))
 
-typed_text = st.chat_input("Đặt câu hỏi nghiên cứu của bạn...")
+if st.session_state.pending_send is not None:
+    pending_text = st.session_state.pending_send["text"]
+    st.warning("Telegram đang chờ xác nhận. Chỉ nút bên dưới mới có thể gửi tin nhắn.")
+    st.text_area("Nội dung sẽ gửi", value=pending_text, height=160, disabled=True)
+    can_send = bool(pending_text.strip()) and all(os.getenv(key) for key in tool_requirements["send"])
+    if not can_send:
+        st.caption("Cần nội dung và TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID trong .env để gửi.")
+    confirm_col, cancel_col = st.columns(2)
+    with confirm_col:
+        if st.button("Xác nhận và gửi Telegram", disabled=not can_send, use_container_width=True):
+            event = execute_tool_call(ToolCall(name="send", args={"text": pending_text, "confirmed": True}))
+            success = event["result"].get("status") == "sent"
+            answer = "Đã gửi Telegram." if success else f"Gửi Telegram thất bại: {event['result'].get('message', 'Lỗi không xác định.')}"
+            st.session_state.messages.append({"role": "assistant", "content": answer, "tool_events": [event]})
+            st.session_state.history.extend([
+                {"role": "user", "content": "Tôi đã xác nhận gửi bằng nút trong UI."},
+                {"role": "assistant", "content": answer},
+            ])
+            st.session_state.pending_send = None
+            st.rerun()
+    with cancel_col:
+        if st.button("Hủy gửi", use_container_width=True):
+            st.session_state.messages.append({"role": "assistant", "content": "Đã hủy gửi Telegram."})
+            st.session_state.pending_send = None
+            st.rerun()
+
+typed_text = st.chat_input("Đặt câu hỏi nghiên cứu của bạn...", disabled=st.session_state.pending_send is not None)
 user_text = selected_example or typed_text
 if user_text:
     st.session_state.messages.append({"role": "user", "content": user_text})
@@ -165,9 +209,6 @@ if user_text:
         with st.spinner("Đang tìm và kiểm tra nguồn..."):
             try:
                 prompt = PROMPT_PATH.read_text(encoding="utf-8")
-                declarations = load_tool_declarations(TOOLS_PATH)
-                # Sending remains unavailable in the demo UI.
-                declarations = [tool for tool in declarations if tool["name"] != "send"]
                 provider = make_provider("openai")
                 context = [
                     {"role": "system", "content": prompt},
@@ -193,5 +234,8 @@ if user_text:
                     {"role": "user", "content": user_text},
                     {"role": "assistant", "content": answer},
                 ])
+                if result["status"] == "waiting_for_send_confirmation":
+                    st.session_state.pending_send = result["pending_send"]
+                    st.rerun()
             except Exception as exc:
                 st.error(f"Không chạy được agent: {type(exc).__name__}: {exc}")

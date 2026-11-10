@@ -1,0 +1,93 @@
+{
+  "generated_at": "2026-11-10T21:08:06",
+  "artifact_version": "tool-smoke+p5c07c09c2ea9+t52d987accec3",
+  "note": "No Telegram message is sent. API keys and tool response content are not recorded.",
+  "tools": [
+    {
+      "tool": "clarify",
+      "status": "completed",
+      "error_type": null,
+      "item_count": null,
+      "result_count": null,
+      "elapsed_seconds": 0.0
+    },
+    {
+      "tool": "timeline",
+      "status": "missing_env",
+      "missing_env": [
+        "RAPIDAPI_KEY"
+      ]
+    },
+    {
+      "tool": "social_search",
+      "status": "missing_env",
+      "missing_env": [
+        "RAPIDAPI_KEY"
+      ]
+    },
+    {
+      "tool": "lookup",
+      "status": "completed",
+      "error_type": null,
+      "item_count": 2,
+      "result_count": null,
+      "elapsed_seconds": 1.07
+    },
+    {
+      "tool": "fetch",
+      "status": "completed",
+      "error_type": null,
+      "item_count": 1,
+      "result_count": null,
+      "elapsed_seconds": 2.01
+    },
+    {
+      "tool": "format",
+      "status": "completed",
+      "error_type": null,
+      "item_count": null,
+      "result_count": null,
+      "elapsed_seconds": 0.0
+    },
+    {
+      "tool": "send",
+      "status": "guarded",
+      "error_type": null,
+      "item_count": null,
+      "result_count": null,
+      "elapsed_seconds": 0.0
+    },
+    {
+      "tool": "policy",
+      "status": "completed",
+      "error_type": null,
+      "item_count": null,
+      "result_count": 3,
+      "elapsed_seconds": 0.01
+    },
+    {
+      "tool": "papers",
+      "status": "error",
+      "error_type": "ReadTimeout",
+      "item_count": null,
+      "result_count": null,
+      "elapsed_seconds": 30.7
+    },
+    {
+      "tool": "paper_text",
+      "status": "completed",
+      "error_type": null,
+      "item_count": 1,
+      "result_count": null,
+      "elapsed_seconds": 2.24
+    },
+    {
+      "tool": "dedupe_sources",
+      "status": "completed",
+      "error_type": null,
+      "item_count": 1,
+      "result_count": null,
+      "elapsed_seconds": 0.0
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-11-10T21:32:29",
+  "artifact_version": "tool-smoke+p5c07c09c2ea9+t52d987accec3",
+  "note": "No Telegram message is sent. API keys and tool response content are not recorded.",
+  "tools": [
+    {
+      "tool": "timeline",
+      "status": "completed",
+      "error_type": null,
+      "rapidapi_http_status": null,
+      "item_count": 1,
+      "result_count": null,
+      "elapsed_seconds": 3.13
+    },
+    {
+      "tool": "social_search",
+      "status": "completed",
+      "error_type": null,
+      "rapidapi_http_status": null,
+      "item_count": 1,
+      "result_count": null,
+      "elapsed_seconds": 2.49
+    }
+  ]
+}

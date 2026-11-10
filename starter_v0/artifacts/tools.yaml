@@ -1,18 +1,4 @@
-# starter_v0 — tool declarations (intentionally vague).
-# Names and descriptions here are a rough first draft. Routing rules, name->handle
-# mapping, arg conventions (news/timeframe/Top), and the send-confirmation boundary
-# are NOT spelled out anywhere yet. Your job is to make these declarations + the
-# system prompt good enough that the agent routes correctly on the eval.
-#
-# If you rename a tool, keep the name in sync across:
-#   this file  ->  tools/__init__.py (TOOL_FUNCTIONS)  ->  data/eval_base.json + data/eval_research_extension.json
-# `pytest tests/test_tool_contract.py` checks this sync for you.
-#
-# TODO(student):
-#   - Rewrite every description: what it does, WHEN to use it, WHEN NOT to use it.
-#   - Spell out arg conventions in parameter descriptions (handle format, topic/timeframe, search_type).
-#   - Make the `send` confirmation boundary explicit.
-#   - Declare your new tool(s) at the end of this file.
+# Tool declarations used by the model. Names must match tools/__init__.py.
 tools:
   - name: dedupe_sources
     description: "Gộp các nguồn nghiên cứu trùng URL trong danh sách item đã có. Dùng khi user yêu cầu loại nguồn trùng trước khi tổng hợp; không dùng để tìm hoặc tải nguồn mới. Giữ item đầu tiên và bỏ tham số theo dõi URL."
@@ -32,7 +18,7 @@ tools:
 
   # ---------------- Core tools ----------------
   - name: clarify
-    description: "Gửi một câu hỏi cho người dùng."
+    description: "Hỏi người dùng một thông tin còn thiếu hoặc xin xác nhận. Dùng khi thiếu handle/URL cần thiết (response_type=text) hoặc trước mọi yêu cầu gửi/đăng (response_type=yes_no); không tự đoán dữ liệu còn thiếu. Không dùng khi đã đủ thông tin để nghiên cứu."
     parameters:
       type: object
       properties:
@@ -61,7 +47,7 @@ tools:
       required: [query]
 
   - name: lookup
-    description: "Tìm trên WEB. Dùng cho tin tức, bài báo, thông tin chung; đặt topic=news và timeframe=day khi hỏi tin hôm nay, week khi hỏi tin tuần này. Ưu tiên ý định mới nhất trong hội thoại; không dùng để tìm tweet/X/Twitter."
+    description: "Tìm trên WEB. Dùng cho tin tức, bài báo, thông tin chung; đặt topic=news và timeframe=day khi hỏi tin hôm nay, week khi hỏi tin tuần này. Chỉ gọi thêm policy nếu người dùng yêu cầu rõ kiểm tra policy công ty trong cùng câu hỏi. Ưu tiên ý định mới nhất trong hội thoại; không dùng để tìm tweet/X/Twitter."
     parameters:
       type: object
       properties:
@@ -72,22 +58,22 @@ tools:
       required: [query]
 
   - name: fetch
-    description: "Lấy nội dung từ một địa chỉ."
+    description: "Đọc nội dung của URL cụ thể bằng Firecrawl. Dùng khi người dùng đưa đường dẫn bài/trang và muốn đọc hoặc tóm tắt; nếu chưa có URL thì gọi clarify. Không dùng để tìm kiếm web theo chủ đề (dùng lookup)."
     parameters:
       type: object
       properties:
-        url: {type: string, default: "", description: "Địa chỉ"}
+        url: {type: string, default: "", description: "URL đầy đủ http(s) do người dùng cung cấp hoặc lấy được từ kết quả tìm kiếm; không bịa URL."}
       required: [url]
 
   - name: format
-    description: "Trình bày dữ liệu đã có thành văn bản."
+    description: "Định dạng danh sách nguồn đã thu thập thành bản tin/digest. Dùng sau khi đã có các item từ lookup, fetch, papers hoặc tool khác; không dùng để tự tìm hay xác minh nguồn mới."
     parameters:
       type: object
       properties:
         items:
           type: array
           default: []
-          description: "Danh sách item"
+          description: "Các nguồn đã có; giữ title, url, source và summary để có trích dẫn."
           items:
             type: object
             properties:
@@ -96,32 +82,32 @@ tools:
               source: {type: string}
               summary: {type: string}
               section: {type: string}
-        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Khuôn"}
+        template: {type: string, enum: [brief, sections, bullets, thread, daily_ai_vn], default: "sections", description: "Kiểu trình bày: brief ngắn, sections theo mục, bullets gạch đầu dòng, thread đánh số, daily_ai_vn bản tin tiếng Việt."}
         headline: {type: string, default: "", description: "Tiêu đề"}
       required: [items, template]
 
   # ---------------- Bonus tools ----------------
   - name: send
-    description: "Gửi một đoạn văn bản đi."
+    description: "Gửi văn bản tới Telegram, là hành động có tác dụng bên ngoài. Chỉ dùng sau khi người dùng đã xác nhận rõ ràng ở một lượt sau câu hỏi clarify(response_type=yes_no); đặt confirmed=true khi đó. Không gọi để hỏi xác nhận, tóm tắt, hoặc xử lý yêu cầu ngoài phạm vi. UI/CLI còn yêu cầu xác nhận thủ công trước khi gửi thật."
     parameters:
       type: object
       properties:
         text: {type: string, default: "", description: "Nội dung"}
-        confirmed: {type: boolean, default: false, description: "Cờ xác nhận"}
+        confirmed: {type: boolean, default: false, description: "Chỉ true sau xác nhận rõ ràng của người dùng; code UI/CLI kiểm tra thêm trước khi POST."}
       required: [text]
 
   - name: policy
-    description: "Tìm trong tài liệu nội bộ."
+    description: "Tra các tài liệu policy cục bộ của bài lab khi người dùng hỏi rõ về company policy hoặc quy định nội bộ. Chọn policy_area=source_citation cho câu hỏi về nguồn, citation, fact đã xác minh, hoặc tweet viral có đáng tin không; data_privacy cho dữ liệu riêng tư; external_publishing cho đăng/gửi; ai_research cho nghiên cứu AI; tool_usage cho cách dùng tool. Nếu cùng yêu cầu còn cần tin web hoặc paper, gọi cả hai tool trong cùng lượt. Không gọi policy chỉ vì người dùng muốn tin web; không dùng cho chính sách pháp luật ngoài công ty."
     parameters:
       type: object
       properties:
         query: {type: string, default: "", description: "Truy vấn"}
-        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "Nhóm"}
+        policy_area: {type: string, enum: [all, ai_research, source_citation, data_privacy, external_publishing, tool_usage], default: "all", description: "source_citation cho kiểm chứng nguồn/citation/tweet viral; data_privacy cho dữ liệu cá nhân; external_publishing cho gửi/đăng; ai_research cho nghiên cứu; tool_usage cho sử dụng tool; all khi không rõ nhóm."}
         top_k: {type: integer, default: 3, description: "Số mục"}
       required: [query]
 
   - name: papers
-    description: "Tìm bài báo khoa học."
+    description: "Tìm paper trên arXiv theo chủ đề và trả metadata/abstract. Dùng khi người dùng muốn tìm nghiên cứu khoa học; không dùng cho tin tức web hoặc đọc toàn văn một paper đã biết (dùng paper_text)."
     parameters:
       type: object
       properties:
@@ -131,7 +117,7 @@ tools:
       required: [query]
 
   - name: paper_text
-    description: "Lấy nội dung text của một bài báo."
+    description: "Tải PDF của một paper arXiv theo ID hoặc URL arXiv rồi trích văn bản từ các trang đầu. Dùng khi người dùng muốn đọc paper cụ thể; nếu chưa biết paper nào thì dùng papers trước. Không dùng cho URL bài báo web thông thường (dùng fetch)."
     parameters:
       type: object
       properties:

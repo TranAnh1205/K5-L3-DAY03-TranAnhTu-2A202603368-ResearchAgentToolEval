@@ -19,6 +19,14 @@ def _twitter_get(path: str, params: dict[str, Any]) -> dict[str, Any]:
         headers={"x-rapidapi-key": key, "x-rapidapi-host": host},
         timeout=TIMEOUT,
     )
+    if response.status_code in {403, 429}:
+        try:
+            data = response.json()
+            detail = str(data.get("message") or data.get("error") or "") if isinstance(data, dict) else ""
+        except ValueError:
+            detail = ""
+        detail = detail.replace(key, "[REDACTED]")
+        raise RuntimeError(f"RapidAPI HTTP {response.status_code}: {detail or getattr(response, 'reason', 'request denied')}")
     response.raise_for_status()
     return response.json()
 

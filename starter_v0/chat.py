@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -115,6 +116,26 @@ def run_model_tool_loop(
             # Streamlit inherits the Windows terminal encoding, which may not
             # support emoji or Unicode arguments. Keep this diagnostic ASCII.
             print(f"TOOL {call.name}({json.dumps(call.args, ensure_ascii=True, sort_keys=True)})")
+            if call.name == "send":
+                # Model-provided confirmed=true is not user consent. The UI or
+                # CLI must collect a separate human confirmation before POSTing.
+                raw_text = call.args.get("text", "")
+                pending_text = raw_text if isinstance(raw_text, str) else ""
+                event = {
+                    "tool": "send",
+                    "args": call.args,
+                    "result": {"status": "awaiting_confirmation"},
+                }
+                round_record["tool_results"].append(event)
+                all_tool_events.append(event)
+                rounds.append(round_record)
+                return {
+                    "status": "waiting_for_send_confirmation",
+                    "assistant_text": "Kiểm tra nội dung bên dưới và xác nhận nếu bạn muốn gửi lên Telegram.",
+                    "pending_send": {"text": pending_text},
+                    "rounds": rounds,
+                    "tool_events": all_tool_events,
+                }
             event = execute_tool_call(call)
             round_record["tool_results"].append(event)
             all_tool_events.append(event)
@@ -152,6 +173,10 @@ def write_transcript(path: Path, transcript: dict[str, Any]) -> None:
 
 
 def main() -> None:
+    # Windows shells may use a legacy code page. Keep interactive output from
+    # failing when the model answers in Vietnamese or includes emoji.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="backslashreplace")
     parser = argparse.ArgumentParser(description="Interactive Research Agent chat with transcript logging.")
     parser.add_argument("--provider", choices=["openrouter", "openai", "anthropic", "gemini", "ollama"], required=True)
     parser.add_argument("--model", default=None)
@@ -233,6 +258,19 @@ def main() -> None:
                 model=args.model,
                 max_tool_rounds=args.max_tool_rounds,
             )
+            if result["status"] == "waiting_for_send_confirmation":
+                pending_text = result["pending_send"]["text"]
+                print(f"\nTelegram message preview:\n{pending_text}")
+                approval = input("Type YES to send to Telegram, or anything else to cancel: ").strip()
+                if approval == "YES" and pending_text.strip():
+                    send_event = execute_tool_call(ToolCall(name="send", args={"text": pending_text, "confirmed": True}))
+                    result["tool_events"].append(send_event)
+                    result["status"] = "sent" if send_event["result"].get("status") == "sent" else "send_error"
+                    result["assistant_text"] = "Telegram message sent." if result["status"] == "sent" else f"Telegram send failed: {send_event['result'].get('message', 'unknown error')}"
+                else:
+                    result["status"] = "send_cancelled"
+                    result["assistant_text"] = "Telegram message cancelled."
+                result.pop("pending_send", None)
             turn_record.update(result)
             assistant_text = result["assistant_text"]
             print(f"\nAgent> {assistant_text}")

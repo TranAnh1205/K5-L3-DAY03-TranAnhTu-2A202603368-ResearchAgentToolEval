@@ -78,6 +78,7 @@ def test_send_confirmed_posts_to_telegram(monkeypatch, fake_http) -> None:
     assert "fake-token" in calls[0]["url"]
     assert calls[0]["json"]["chat_id"] == "fake-channel"
     assert calls[0]["json"]["text"] == "Demo"
+    assert "parse_mode" not in calls[0]["json"]
 
 
 def test_send_confirmed_without_env_returns_error_and_no_request(fake_http) -> None:
