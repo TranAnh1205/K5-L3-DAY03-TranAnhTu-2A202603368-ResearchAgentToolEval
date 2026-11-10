@@ -123,3 +123,31 @@ tools:
         max_pages: {type: integer, default: 5, description: "Số trang"}
         max_chars: {type: integer, default: 8000, description: "Số ký tự"}
       required: [arxiv_url]
+
+  - name: confirm_action
+    description: "Yêu cầu người dùng xác nhận trước khi thực hiện một hành động."
+    parameters:
+      type: object
+      properties:
+        action:
+          type: string
+          description: "Hành động cần xác nhận, ví dụ: send_telegram, publish_post"
+        details:
+          type: string
+          default: ""
+          description: "Thông tin chi tiết về hành động, nội dung và nơi nhận"
+        question:
+          type: string
+          default: "Bạn có chắc chắn muốn thực hiện hành động này không?"
+          description: "Câu hỏi xác nhận dành cho người dùng"
+      required: [action]
+
+  - name: normalize_handle
+    description: "Chuẩn hóa tên tài khoản mạng xã hội thành username hợp lệ."
+    parameters:
+      type: object
+      properties:
+        screenname:
+          type: string
+          description: "Tên tài khoản đầu vào, có thể chứa ký tự @ hoặc khoảng trắng"
+      required: [screenname]

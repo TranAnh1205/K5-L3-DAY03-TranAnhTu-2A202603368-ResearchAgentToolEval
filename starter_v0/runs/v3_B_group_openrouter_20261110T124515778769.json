@@ -1,0 +1,713 @@
+{
+  "run_id": "v3_B_group_openrouter_20261110T124515778769",
+  "version": "v3",
+  "artifact_version": "v3+p8821e2c9cd96+t5b22a2476d41",
+  "prompt_hash": "8821e2c9cd9610b4a5ffb3d421c5ce1d5a47dad3858b1299ebb3319086d499db",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "phase": "B",
+  "suite": "group",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "data\\eval_group.json",
+  "dataset_id": "day04_v2_research_group",
+  "dataset_role": "group",
+  "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
+  "generated_at": "2026-11-10T12:45:15",
+  "summary": {
+    "total_cases": 10,
+    "measured_cases": 10,
+    "provider_error_cases": 0,
+    "passed_cases": 10,
+    "case_accuracy": 1.0,
+    "tool_routing_accuracy": 1.0,
+    "argument_accuracy": 1.0,
+    "multiturn_accuracy": 1.0,
+    "failure_counts": {},
+    "observed_mismatch_counts": {}
+  },
+  "results": [
+    {
+      "id": "R15_user_tweets_handle_direct",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_direct_handle",
+        "difficulty": "easy",
+        "what_it_tests": "Người dùng cung cấp trực tiếp @handle → gọi timeline, giữ nguyên handle và không dùng social_search."
+      },
+      "input": "Lấy tweet mới nhất từ tài khoản @naval",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "naval"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "naval",
+              "limit": 1
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "naval",
+            "limit": 1
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R16_search_tweets_latest",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_latest_search",
+        "difficulty": "medium",
+        "what_it_tests": "Phân biệt yêu cầu tweet mới nhất với tweet phổ biến; chọn search_type=Latest."
+      },
+      "input": "Tìm những tweet mới nhất về chủ đề AI Agent trên Twitter",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI Agent",
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI Agent",
+              "search_type": "Latest"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "AI Agent",
+            "search_type": "Latest"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R17_news_month",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_month_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "Ánh xạ cụm 'trong tháng này' thành timeframe=month, không nhầm với week hoặc day."
+      },
+      "input": "Tìm tin tức công nghệ trong tháng này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "công nghệ",
+              "topic": "news",
+              "timeframe": "month",
+              "max_results": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "max_results": 5
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "công nghệ",
+            "topic": "news",
+            "timeframe": "month",
+            "items": [
+              {
+                "title": "Mỹ đưa 'báu vật công nghệ mạnh nhất thế giới' sang Việt Nam phục vụ dự án 5.200 tỷ đồng - Đến Tesla, Meta, Microsoft cũng phải săn đón",
+                "url": "https://cafef.vn/my-dua-bau-vat-cong-nghe-manh-nhat-the-gioi-sang-viet-nam-phuc-vu-du-an-5200-ty-dong-den-tesla-meta-microsoft-cung-phai-san-don-18826102211052326.chn",
+                "source": "cafef.vn",
+                "summary": "Việc đầu tư hạ tầng tính toán AI diễn ra trong bối cảnh nhu cầu xử lý dữ liệu, phát triển mô hình AI tạo sinh và tự động hóa ngày càng tăng. Với các doanh nghiệp công nghệ, năng lực tiếp cận GPU hiệu năng cao là một trong những yếu tố quan trọng để rút ngắn thời gian nghiên cứu, thử nghiệm và triển khai sản phẩm. [...] DGX H100 là hệ thống máy chủ chuyên dụng cho các tác vụ tính toán AI hiệu năng cao. Mỗi hệ thống được trang bị 8 bộ xử lý đồ họa NVIDIA H100 Tensor Core, kết nối với nhau thông qua công nghệ NVLink nhằm tăng tốc độ trao đổi dữ liệu giữa các GPU. [...] FPT cho biết hệ thống sẽ phục vụ các nhu cầu như AI tạo sinh (Generative AI), phát triển mô hình ngôn ngữ lớn, xe tự hành và chuyển đổi xanh. Thông qua dịch vụ đám my GPU, khách hàng doanh nghiệp có thể tiếp cận năng lực tính toán mà không nhất thiết phải tự đầu tư toàn bộ hệ thống máy chủ chuyên dụng.",
+                "score": 0.29294962
+              },
+              {
+                "title": "Khoa học công nghệ phải tạo ra sản phẩm, giá trị cụ thể",
+                "url": "https://laodong.vn/thoi-su/khoa-hoc-cong-nghe-phai-tao-ra-san-pham-gia-tri-cu-the-1784557.ldo",
+                "source": "laodong.vn",
+                "summary": "Hôn nhn gia đình\n\nChuyện nhà mình Yêu 360 Nuôi con\n\nCông nghệ\n\nThế giới số Vũ khí - Qun sự\n\nXe\n\nThị trường xe Lái xe an toàn\n\nTin tức việc làm\n\nTư vấn lao động Xuất khẩu lao động\n\nĐính chính\n\nBÁO LAO ĐỘNG\n\nĐăng nhập bằng tài khoản Lao Động\n\nEmail đăng nhập:\n\nMật khẩu:\n\nBạn quên mật khẩu?  Lấy lại mật khẩu\n\nBạn chưa có tài khoản?  Đăng ký ngay.\n\n|  |  |\n --- |\n|  |  |\n\n|  |  |\n --- |\n|  |  | [...] Thời sự\n\nSự kiện bình luận\n\nPháp luật\n\nTư vấn pháp luật An ninh hình sự\n\nCông đoàn\n\nCách làm hay từ cơ sở Vì lợi ích đoàn viên\n\nThể thao\n\nBóng chuyền Bóng đá Việt Nam Bóng đá quốc tế Lịch thi đấu Golf Tennis\n\nThế giới\n\nTư liệu\n\nSức khỏe\n\nY tế Dinh dưỡng - Ẩm thực Làm đẹp Các loại bệnh\n\nVăn hóa - Giải trí\n\nVăn hóa Giải trí Thời trang Sách hay\n\nBạn đọc\n\nĐiều tra theo đơn thư Chính sách Ý kiến - Hồi m\n\nBất động sản\n\nNhà đẹp Quy hoạch\n\nGiáo dục\n\nChính sách giáo dục Tuyển sinh\n\nHôn nhn gia đình [...] Đăng nhập\n\n### Thời sự\n\n### Sự kiện Bình luận\n\n# Khoa học công nghệ phải tạo ra sản phẩm, giá trị cụ thể\n\nHạo Thiên   -    Thứ bảy, 17/10/2026 10:23 (GMT+7)\n\n, tại thủ đô Tokyo, Tổng Bí thư, Chủ tịch nước Tô Lm đã có cuộc hội đàm với Thủ tướng Nhật Bản Takaichi...\n\nQuốc hội thảo luận về chủ trương đầu tư 3 dự án đường bộ cao tốc\n\n## Quốc hội thảo luận về chủ trương đầu tư 3 dự án đường bộ cao tốc",
+                "score": 0.2850937
+              },
+              {
+                "title": "Apple, Intel và Meta muốn mở rộng sản xuất công nghệ cao, phát triển công nghiệp bán dẫn - Tuổi Trẻ Online",
+                "url": "https://tuoitre.vn/apple-intel-va-meta-muon-mo-rong-san-xuat-cong-nghe-cao-phat-trien-cong-nghiep-ban-dan-100261014161411471.htm",
+                "source": "tuoitre.vn",
+                "summary": "Tại hội nghị có chủ đề \"Kỷ nguyên tăng trưởng mới: Đưa quan hệ đối tác kinh tế Việt Nam -Hoa Kỳ đi vào chiều su\", Phó thủ tướng thường trực nêu 5 lĩnh vực hợp tác ưu tiên giữa hai nước.\n\nBao gồm: công nghệ cao, đặc biệt là bán dẫn, trí tuệ nhn tạo và dữ liệu; năng lượng sạch và chuyển đổi xanh, ưu tiên đầu tư vào năng lượng tái tạo; phát triển chuỗi cung ứng bền vững; hợp tác tài chính, đổi mới sáng tạo và khởi nghiệp; giáo dục, đào tạo và phát triển nguồn nhn lực chất lượng cao. [...] + Mua sắm\n  + Chứng khoán\n  + Xem thêm...\n  + Giá vàng hôm nay\n Công nghệ\n  + Thiết bị\n  + Chuyển đổi số\n  + Cầu nối\n  + Nhịp sống số\n  + Xem thêm...\n  + Trải nghiệm\n  + Thị trường\n  + Thủ thuật\n  + Gia đình số\n  + Nhịp cầu\n Xe\n  + Tin tức\n  + Tư vấn mua xe\n  + Đánh giá xe\n  + Thị trường xe\n  + Xem thêm...\n  + Hỏi đáp\n  + Kỹ thuật\n  + An toàn giao thông\n Du lịch\n  + Cơ hội du lịch\n  + Đi chơi\n  + Mách bạn\n  + Quê hương\n Nhịp sống trẻ\n  + Xu hướng\n  + Theo gương Bác\n  + Khám phá\n  + Yêu [...] Những kiến nghị khác tập trung vào đào tạo nhn lực công nghệ cao, hỗ trợ doanh nghiệp Việt Nam tham gia chuỗi cung ứng toàn cầu và ứng dụng trí tuệ nhn tạo (AI) trong hoạt động sản xuất, kinh doanh.\n\nTập đoàn AES và GE Vernova mong muốn tiếp tục hợp tác phát triển nguồn điện, hệ thống truyền tải và chuỗi cung ứng thiết bị năng lượng, đáp ứng nhu cầu điện cho sản xuất và phát triển kinh tế.",
+                "score": 0.27269635
+              },
+              {
+                "title": "Dùng công nghệ ngoại xịn nhưng hỏng toàn bộ chỉ sau 3 tháng, Việt Nam vào cuộc rồi thành công lớn, khẳng định đẳng cấp công nghệ nội địa",
+                "url": "https://cafef.vn/dung-cong-nghe-ngoai-xin-nhung-hong-toan-bo-chi-sau-3-thang-viet-nam-vao-cuoc-roi-thanh-cong-lon-khang-dinh-dang-cap-cong-nghe-noi-dia-188261028104936586.chn",
+                "source": "cafef.vn",
+                "summary": "Bên cạnh ý nghĩa công nghệ, sản phẩm còn đem lại lợi ích kinh tế. Theo EEMC đưa tin ngày 23/11/2011, việc sử dụng máy biến áp 500 kV sản xuất trong nước giúp tiết giảm gần 30% chi phí mua sắm so với thiết bị nhập khẩu cùng loại. Năng lực sản xuất nội địa cũng giúp ngành điện chủ động hơn trong cung ứng, bảo dưỡng và xử lý sự cố, đồng thời giảm phụ thuộc vào nguồn thiết bị từ nước ngoài. [...] TIN MỚI\n\nMua công nghệ ngoại xịn nhưng hỏng toàn bộ chỉ sau 3 tháng, Việt Nam tự sản xuất rồi thành công lớn, nay làm chủ công nghệ phức tạp  - Ảnh 1.\n\nẢnh minh họa\n\nNgày 22/11/2011, đóng điện thành công máy biến áp 500 kV đầu tiên do Việt Nam tự nghiên cứu, thiết kế và chế tạo tại Trạm biến áp 500 kV Nho Quan, Ninh Bình. [...] Công trình có nhiệm vụ giải tỏa công suất của tổ máy số 4 Nhà máy Thủy điện Sơn La, đồng thời giảm tình trạng quá tải tại trạm và tăng cường khả năng cung cấp điện cho Hà Nội cùng các tỉnh khu vực phía Bắc.",
+                "score": 0.2695312
+              },
+              {
+                "title": "Ra mắt nền tảng kết nối công nghệ Việt Nam - Australia - Báo VnExpress",
+                "url": "https://vnexpress.net/ra-mat-nen-tang-ket-noi-cong-nghe-viet-nam-australia-5131338.html",
+                "source": "vnexpress.net",
+                "summary": "Điều này thực hiện qua việc giúp doanh nghiệp và các cơ sở nghiên cứu, đào tạo trong nước tiếp cận tri thức, phát triển nhn lực và nng cao năng lực công nghệ. Các dự án vì thế cần gắn hoạt động nghiên cứu với khả năng tạo ra sản phẩm đáp ứng nhu cầu thị trường và tham gia su hơn vào chuỗi giá trị. [...] Thứ trưởng Khoa học và Công nghệ Lê Xun Định. Ảnh: Mai Hà\n\n \n\nThứ trưởng đề nghị thúc đẩy hợp tác khoa học công nghệ Việt Nam - Australia theo hướng thiết thực, có kết quả và duy trì lu dài. Trong đó, tập trung vào bốn nhiệm vụ: lựa chọn dự án từ nhu cầu thực tế và xác định rõ kết quả; gắn nghiên cứu, phát triển sản phẩm với đào tạo nhn lực; vận hành hiệu quả nền tảng V-bridge; đồng thời xác định dự án ưu tiên, đối tác, trách nhiệm từng bên, nguồn lực dự kiến, sản phẩm và mốc đánh giá. [...] Cục trưởng Công nghệ số và Trí tuệ nhn tạo Nguyễn Khắc Lịch cho biết, V-bridge hướng tới duy trì kết nối trực tuyến giữa các doanh nghiệp và tổ chức trong hệ sinh thái công nghệ Việt Nam - Australia. Qua đó, các đối tác có thể tiếp tục tìm hiểu, làm việc và phát triển những cơ hội hợp tác sau các cuộc gặp trực tiếp.",
+                "score": 0.2612277
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R18_multiple_parameters",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_handle_and_limit",
+        "difficulty": "medium",
+        "what_it_tests": "Trích xuất đồng thời handle được cung cấp trực tiếp và số lượng tweet limit=7."
+      },
+      "input": "Lấy 7 tweet mới nhất của tài khoản @karpathy",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 7
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 7
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "karpathy",
+            "limit": 7
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R19_missing_search_topic",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_topic",
+        "difficulty": "medium",
+        "what_it_tests": "Không có chủ đề trong ngữ cảnh hội thoại → hỏi lại thay vì tự bịa từ khóa tìm kiếm."
+      },
+      "input": "Tìm tweet về chủ đề mà tôi vừa nhắc đến",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn có thể cho tôi biết chủ đề mà bạn muốn tìm tweet không?",
+              "response_type": "text"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn có thể cho tôi biết chủ đề mà bạn muốn tìm tweet không?",
+            "response_type": "text"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn có thể cho tôi biết chủ đề mà bạn muốn tìm tweet không?",
+            "response_type": "text",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "R20_no_unnecessary_search",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_general_explanation",
+        "difficulty": "medium",
+        "what_it_tests": "Câu hỏi yêu cầu giải thích khái niệm, không yêu cầu dữ liệu thực tế → trả lời trực tiếp, không gọi tool."
+      },
+      "input": "Hãy giải thích ngắn gọn sự khác nhau giữa tìm tweet theo người dùng và tìm tweet theo chủ đề",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [],
+        "actual_text": "Tìm tweet theo người dùng là quá trình tìm kiếm các bài đăng của một tài khoản cụ thể trên Twitter, tức là bạn chỉ xem nội dung mà người dùng đó đã đăng. Ngược lại, tìm tweet theo chủ đề là tìm kiếm các bài đăng liên quan đến một từ khóa hoặc chủ đề nhất định, không giới hạn ở một tài khoản cụ thể nào. Điều này cho phép bạn thấy nhiều quan điểm và thông tin khác nhau về một vấn đề hoặc sự kiện.",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M07_carryover_search_type",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover_search_type",
+        "difficulty": "hard",
+        "what_it_tests": "Thay đổi chủ đề nhưng giữ search_type=Top từ lượt đầu."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tweet phổ biến nhất về AI"
+        },
+        {
+          "role": "user",
+          "content": "Đổi chủ đề thành Machine Learning"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn lấy những tweet phổ biến nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Machine Learning",
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Machine Learning",
+              "search_type": "Top"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "Machine Learning",
+            "search_type": "Top"
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "M08_switch_subject_keep_source",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_keep_source_and_time",
+        "difficulty": "hard",
+        "what_it_tests": "Giữ nguồn web, loại dữ liệu news và timeframe=day; chỉ cập nhật query thành Robotics."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay trên web"
+        },
+        {
+          "role": "user",
+          "content": "Chuyển sang chủ đề Robotics"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn tìm trên web và chỉ lấy tin hôm nay"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "query": "Robotics",
+            "topic": "news",
+            "timeframe": "day"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "Robotics",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Recent advances in AI are creating a 'paradigm shift' for robotics - Berkeley News",
+                "url": "https://news.berkeley.edu/2026/11/09/recent-advances-in-ai-are-creating-a-paradigm-shift-for-robotics",
+                "source": "news.berkeley.edu",
+                "summary": "Traditionally, engineers can directly program the software that tells robots how to perceive objects, plan movements and control their actions, a process called model-based robotics. Or, with model-free robotics, they can train robots to learn behaviors from demonstrations through imitation learning. The first approach requires extensive engineering, while the second needs enormous amounts of data and time. [...] Berkeley-based Ambi Robotics, which specializes in logistics and warehouse order fulfillment, applied the new methods earlier this year to analyze parcel sorting data and test updates to robot behavior. Tests showed an increased capacity of over 15,000 packages sorted annually per robot; the change is now deployed across 30% of the company’s U.S. fleet. [...] Ken Goldberg\n\n“Agentic robotics is a fundamental shift in how robots are controlled,” Goldberg said. “Instead of collecting massive amounts of data and hand-tuning every behavior, teams of agents can quickly generate, test and refine robot programs that allow human engineers to interpret how the programs work for fine-tuning and verification.”",
+                "score": 0.52057004
+              },
+              {
+                "title": "Autonomous EV developer Humble Robotics adds $51M to expand - TT",
+                "url": "https://www.ttnews.com/articles/autonomous-ev-humble-51m",
+                "source": "ttnews.com",
+                "summary": "Humble Robotics raised $51 million in Series A financing, bringing its total funding to $75 million less than a year after its founding.\n The company is developing the Humble Hauler, a battery-electric, cabless Class 8 autonomous vehicle for regional freight routes under 250 miles.\n Humble will fund customer pilots, testing, early manufacturing and expansion into vehicles for 40-foot containers and 53-foot dry van and refrigerated trailers. [...] Stay on top of transportation news: [Get TTNews in your inbox.]\n\nHumble Robotics secured $51 million in new financing, bringing the autonomous electric vehicle developer’s total funding to $75 million less than a year after its founding. [...] The Hauler uses vision-language-action models and is equipped with cameras, lidar and radar that provide 360-degree coverage of its surroundings. The battery-electric skateboard platform has an aerodynamic shield at the front, while shipping containers can be attached through a twist-lock interface.",
+                "score": 0.4017588
+              },
+              {
+                "title": "FDA seeks input on telesurgery, autonomous robotics",
+                "url": "https://www.medtechdive.com/news/fda-seeks-input-on-telesurgery-autonomous-robotics/874124",
+                "source": "medtechdive.com",
+                "summary": "Rapid advances in artificial intelligence, machine learning and connectivity are driving expansion of robotic applications in a wide range of clinical settings, the FDA said. Increases in processing power, data storage and computational efficiency are enabling progress in robotic systems with autonomous capabilities. [...] In another example of teleoperation, manufacturers are developing devices that enable technicians to remotely perform ultrasounds, the FDA said. Robotic devices include stereotactic navigation systems, imaging devices and endoluminal navigation devices. [...] The FDA is asking the robotics community to submit comments on the discussion paper by Jan. 5. Ahead of that deadline, a public workshop to discuss the topics raised in the paper is scheduled for Dec. 2-3.",
+                "score": 0.38998842
+              },
+              {
+                "title": "Kenwood High School JROTC Robotics Program earns regional recognition - ClarksvilleNow.com",
+                "url": "https://clarksvillenow.com/local/kenwood-high-school-jrotc-robotics-program-earns-regional-recognition",
+                "source": "clarksvillenow.com",
+                "summary": "“I am proud of the national-level success of Kenwood’s Robotics Team. It reflects the faculty, JROTC instructors, and cadets’ hard work and dedication toward creating an elite mindset at the school,” Lightner said.\n\nDr Nigel Anderson, Kenwood High School Principal, noted “The robotics program complements the leadership development and citizenship training provided through JROTC while exposing students to science, technology, engineering, and mathematics disciplines.” [...] CLARKSVILLE TN – The Kenwood High School JROTC Robotics Program has grown from a single robotics team into a four-team program that is competing successfully at regional and national-level events. The program currently fields Teams 26163X, 26163A, 26163L, and 26163S, providing students with opportunities to develop skills in engineering, programming, and problem-solving. [...] During the current robotics’ competition season, Team 26163X captured first place at the Tennessee State Fair Robotics Competition. The team followed that performance with another first-place finish at a competition in Elizabethton, Tennessee, where it also received a technical award recognizing excellence in robot design and engineering.",
+                "score": 0.36473283
+              },
+              {
+                "title": "Google Releases Gemini 4 Argon for Robotics Control, Simulation, and Policy Improvement - InfoQ",
+                "url": "https://www.infoq.com/news/2026/11/google-gemini-argon",
+                "source": "infoq.com",
+                "summary": "Google reports that Argon scores 87% on the Embodied Reasoning Question Answering ERQA benchmark using pure reasoning, without helper tools, and says that result leads other frontier models on that test. Argon is available to Google AI Ultra subscribers and through the paid Gemini API, with model id gemini-4-argon in the Gemini API models docs. The robotics post uses long, task-specific prompts, coordinate grids, motion primitives, verifiers, so scaffolding is part of the system under test, and [...] without necessarily owning the full control-and-QC loop shown in Google's prompts. Prior Google work such as Gemini Robotics-ER remains a related line for spatial perception and planning. For architecture reviews, the question is whether one frontier model plus heavy prompt harnesses displaces a pipeline of VLA, simulator, and labeler services. [...] Specialized vision-language-action systems such as OpenVLA-class policies, Physical Intelligence's π-family models, and NVIDIA GR00T with Isaac-oriented tooling optimize for action prediction under robot embodiments and typically rely on large teleoperation or simulation corpora. Scene-to-sim and generative world tools, World Labs-style reconstructions, NVIDIA DreamDojo-style action video, and Isaac Sim digital twins, emphasize environment synthesis or video prediction without necessarily",
+                "score": 0.3231563
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "M09_confirm_send_after_clarify",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_confirm_before_send",
+        "difficulty": "hard",
+        "what_it_tests": "Thông tin đích gửi được bổ sung qua nhiều lượt nhưng agent vẫn phải xác nhận rõ ràng trước khi thực hiện hành động ghi."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Gửi bản tin nghiên cứu này lên Telegram giúp tôi"
+        },
+        {
+          "role": "user",
+          "content": "Gửi vào nhóm Telegram của dự án"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, hãy gửi đi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "question": "Bạn xác nhận muốn đăng bản tin này lên Telegram chứ?",
+              "response_type": "yes_no"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "clarify",
+          "args": {
+            "question": "Bạn xác nhận muốn đăng bản tin này lên Telegram chứ?",
+            "response_type": "yes_no"
+          },
+          "result": {
+            "tool": "ask_user",
+            "question": "Bạn xác nhận muốn đăng bản tin này lên Telegram chứ?",
+            "response_type": "yes_no",
+            "options": [],
+            "awaiting_user": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "M10_correction_subject_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "case_suite": "group",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction_subject_limit",
+        "difficulty": "hard",
+        "what_it_tests": "Giữ ý định tìm tweet mới nhất, sửa chủ đề Python thành JavaScript và sửa số lượng từ 10 thành 3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tìm 10 tweet mới nhất về Python"
+        },
+        {
+          "role": "user",
+          "content": "À, đổi thành JavaScript"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy 3 tweet thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "JavaScript",
+              "search_type": "Latest",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "JavaScript",
+              "search_type": "Latest",
+              "limit": 3
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "query": "JavaScript",
+            "search_type": "Latest",
+            "limit": 3
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    }
+  ]
+}

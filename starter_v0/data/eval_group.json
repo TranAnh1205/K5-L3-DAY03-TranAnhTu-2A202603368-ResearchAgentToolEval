@@ -2,6 +2,288 @@
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
-  "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "allowed_failure_types": [
+    "wrong_tool",
+    "wrong_arg_value",
+    "wrong_boundary",
+    "unnecessary_tool",
+    "out_of_scope",
+    "missing_info"
+  ],
+  "cases": [
+    {
+      "id": "R15_user_tweets_handle_direct",
+      "phase": "B",
+      "suite": "group",
+      "query": "Lấy tweet mới nhất từ tài khoản @naval",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "naval"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "routing_direct_handle",
+        "difficulty": "easy",
+        "what_it_tests": "Người dùng cung cấp trực tiếp @handle → gọi timeline, giữ nguyên handle và không dùng social_search."
+      }
+    },
+    {
+      "id": "R16_search_tweets_latest",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm những tweet mới nhất về chủ đề AI Agent trên Twitter",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI Agent",
+              "search_type": "Latest"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_latest_search",
+        "difficulty": "medium",
+        "what_it_tests": "Phân biệt yêu cầu tweet mới nhất với tweet phổ biến; chọn search_type=Latest."
+      }
+    },
+    {
+      "id": "R17_news_month",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm tin tức công nghệ trong tháng này",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "month"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_month_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "Ánh xạ cụm 'trong tháng này' thành timeframe=month, không nhầm với week hoặc day."
+      }
+    },
+    {
+      "id": "R18_multiple_parameters",
+      "phase": "B",
+      "suite": "group",
+      "query": "Lấy 7 tweet mới nhất của tài khoản @karpathy",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 7
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "arg_handle_and_limit",
+        "difficulty": "medium",
+        "what_it_tests": "Trích xuất đồng thời handle được cung cấp trực tiếp và số lượng tweet limit=7."
+      }
+    },
+    {
+      "id": "R19_missing_search_topic",
+      "phase": "B",
+      "suite": "group",
+      "query": "Tìm tweet về chủ đề mà tôi vừa nhắc đến",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "clarify_missing_topic",
+        "difficulty": "medium",
+        "what_it_tests": "Không có chủ đề trong ngữ cảnh hội thoại → hỏi lại thay vì tự bịa từ khóa tìm kiếm."
+      }
+    },
+    {
+      "id": "R20_no_unnecessary_search",
+      "phase": "B",
+      "suite": "group",
+      "query": "Hãy giải thích ngắn gọn sự khác nhau giữa tìm tweet theo người dùng và tìm tweet theo chủ đề",
+      "failure_type": "unnecessary_tool",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "metadata": {
+        "skill": "no_tool_general_explanation",
+        "difficulty": "medium",
+        "what_it_tests": "Câu hỏi yêu cầu giải thích khái niệm, không yêu cầu dữ liệu thực tế → trả lời trực tiếp, không gọi tool."
+      }
+    },
+    {
+      "id": "M07_carryover_search_type",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tweet phổ biến nhất về AI"
+        },
+        {
+          "role": "user",
+          "content": "Đổi chủ đề thành Machine Learning"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn lấy những tweet phổ biến nhé"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "Machine Learning",
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_carryover_search_type",
+        "difficulty": "hard",
+        "what_it_tests": "Thay đổi chủ đề nhưng giữ search_type=Top từ lượt đầu."
+      }
+    },
+    {
+      "id": "M08_switch_subject_keep_source",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm tin AI hôm nay trên web"
+        },
+        {
+          "role": "user",
+          "content": "Chuyển sang chủ đề Robotics"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn tìm trên web và chỉ lấy tin hôm nay"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "Robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_keep_source_and_time",
+        "difficulty": "hard",
+        "what_it_tests": "Giữ nguồn web, loại dữ liệu news và timeframe=day; chỉ cập nhật query thành Robotics."
+      }
+    },
+    {
+      "id": "M09_confirm_send_after_clarify",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Gửi bản tin nghiên cứu này lên Telegram giúp tôi"
+        },
+        {
+          "role": "user",
+          "content": "Gửi vào nhóm Telegram của dự án"
+        },
+        {
+          "role": "user",
+          "content": "Đúng rồi, hãy gửi đi"
+        }
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_confirm_before_send",
+        "difficulty": "hard",
+        "what_it_tests": "Thông tin đích gửi được bổ sung qua nhiều lượt nhưng agent vẫn phải xác nhận rõ ràng trước khi thực hiện hành động ghi."
+      }
+    },
+    {
+      "id": "M10_correction_subject_and_limit",
+      "phase": "B",
+      "suite": "group",
+      "turns": [
+        {
+          "role": "user",
+          "content": "Tìm 10 tweet mới nhất về Python"
+        },
+        {
+          "role": "user",
+          "content": "À, đổi thành JavaScript"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ lấy 3 tweet thôi"
+        }
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "query": "JavaScript",
+              "search_type": "Latest",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "skill": "multiturn_correction_subject_limit",
+        "difficulty": "hard",
+        "what_it_tests": "Giữ ý định tìm tweet mới nhất, sửa chủ đề Python thành JavaScript và sửa số lượng từ 10 thành 3."
+      }
+    }
+  ]
 }

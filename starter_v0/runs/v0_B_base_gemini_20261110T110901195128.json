@@ -1,0 +1,1077 @@
+{
+  "run_id": "v0_B_base_gemini_20261110T110901195128",
+  "version": "v0",
+  "artifact_version": "v0+peb1c8179815b+t5b22a2476d41",
+  "prompt_hash": "eb1c8179815bd79d34de7d326420bb99b3072e6e8ae96464c02d4411f905fc68",
+  "tools_hash": "5b22a2476d41b989d5dc1e54f24ce7890e781909deb2f7afafb856ab53a6d7c0",
+  "phase": "B",
+  "suite": "base",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash",
+  "system_prompt": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\artifacts\\tools.yaml",
+  "eval_cases": "D:\\ProjectVin\\K5-L3-DAY03-TranAnhTu-2A202603368-ResearchAgentToolEval\\starter_v0\\data\\eval_base.json",
+  "dataset_id": "day04_v2_research_base",
+  "dataset_role": "base",
+  "description": "Core eval cho research agent: routing đúng tool + đúng args, hỏi lại khi thiếu (ask_user), xác nhận trước khi gửi, và xử lý câu ngoài phạm vi / không cần tool. Chấm trên tool_calls + args (subset). KHÔNG sửa file này — chỉ thêm case vào eval_group.json.",
+  "generated_at": "2026-11-10T11:09:01",
+  "summary": {
+    "total_cases": 20,
+    "measured_cases": 7,
+    "provider_error_cases": 13,
+    "passed_cases": 5,
+    "case_accuracy": 0.7143,
+    "tool_routing_accuracy": 0.8571,
+    "argument_accuracy": 0.7143,
+    "multiturn_accuracy": null,
+    "failure_counts": {
+      "wrong_tool": 1,
+      "missing_info": 1
+    },
+    "observed_mismatch_counts": {
+      "wrong_arg_value": 1,
+      "missing_tool_call": 1
+    }
+  },
+  "results": [
+    {
+      "id": "R01_user_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_user_tweets_name_to_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Tin CỦA một người nổi tiếng → map tên Sam Altman thành handle sama rồi gọi get_user_tweets."
+      },
+      "input": "Tweet mới nhất của Sam Altman là gì?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "sama"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "limit": 5,
+              "screenname": "sama"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "limit": 5,
+            "screenname": "sama"
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R02_search_tweets_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_search_tweets",
+        "difficulty": "easy",
+        "what_it_tests": "Tweet theo CHỦ ĐỀ → search_tweets, không phải get_user_tweets."
+      },
+      "input": "Mọi người đang bàn gì về GPT-5 trên Twitter?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {}
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top",
+              "query": "GPT-5",
+              "limit": 5
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "social_search",
+          "args": {
+            "search_type": "Top",
+            "query": "GPT-5",
+            "limit": 5
+          },
+          "result": {
+            "tool": "search_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R03_web_news_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_web_news",
+        "difficulty": "medium",
+        "what_it_tests": "Tin thời sự trên web → web_search topic=news, timeframe=day (hôm nay)."
+      },
+      "input": "Tin tức AI hôm nay có gì nổi bật?",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": true,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "day",
+              "query": "latest AI news updates today"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "wrong_arg_value",
+        "failure_type": "wrong_tool",
+        "failures": [
+          "query: expected 'AI', got 'latest AI news updates today'"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "topic": "news",
+            "timeframe": "day",
+            "query": "latest AI news updates today"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "latest AI news updates today",
+            "topic": "news",
+            "timeframe": "day",
+            "items": [
+              {
+                "title": "Adobe Max 2026 Live Updates: All the AI, Photo and Video News - CNET",
+                "url": "https://www.cnet.com/news-live/adobe-max-2026-live-updates-all-the-ai-photo-and-video-news",
+                "source": "cnet.com",
+                "summary": "The biggest changes are the general release of AI assistants in Photoshop, Adobe Express and its AI hub, Firefly, first teased at last year’s conference. These assistants are similar to chatbots, where you enter your request and the AI does the editing for you. Adobe also released AI music generation tools and new photo editing modes. For video editors, too, there are the new Premiere mobile apps. [...] Adobe’s flagship programs, like Photoshop, have undergone major AI makeovers, including recent developments like AI audio and soundtrack generation. This has been to the dismay of some of its creative customers who are wary of generative AI. This year is expected to be no different. But there are other tensions brewing, including Adobe’s $75 million settlement with the US Justice Department over subscription cancellations and new vibe-coded and free Adobe alternatives. [...] Adobe tech is also now showing up in ChatGPT and Claude; Disney is using Firefly to help design theme park rides. And from what CNET has heard from Adobe execs, the company isn’t planning to slow down its AI research any time soon.",
+                "score": 0.6522641
+              },
+              {
+                "title": "Google Escalates Nvidia Rivalry With New Versions of Its TPU Systems",
+                "url": "https://www.bloomberg.com/news/articles/2026-11-09/google-escalates-nvidia-rivalry-with-new-versions-of-its-tpu-systems",
+                "source": "bloomberg.com",
+                "summary": "### More From Bloomberg\n\nImage 2 Alphabet’s Search Dominance Is at Risk From Its Own AI SuccessImage 3 Google AI in School Triggered Teen’s Mental Health Crisis, Lawsuit SaysImage 4 US Senator Urges Google to Provide AI-Free Search for SchoolsImage 5 Nvidia Probe Into CEO Affair Raises Thorny Questions for AI updated an hour agoImage 6 Months-Old Chip Startup Tenspresso in Talks for $500 Million Valuation\n\n### Top Reads [...] Image 7 AI Has Taken Over Every Corner of the Market by Denise Lu, Gerson Freitas Jr., Caleb Mutua, Weihua Li, Jack Witzig, Matthew Boesler, Kristine Owram, Jeran Wittenstein, David F Morris and Vildana HajricImage 8 Nvidia’s Data Center Vision Spurs Race to Reinvent Electric Transformers by Emily Forgash, Michelle Ma and Mark ChediakImage 9 One of Classical Music’s Biggest Stars Says AI Is Degrading Our Taste by Mishal HusainImage 10 Blackstone Real Estate Seeks Rebound From Shock Exits and [...] The company is introducing two new variations of its tensor processing units, or TPUs, custom-made semiconductors that help develop and run AI software. The latest chips will address the need for confidential computing and help models access a wider range of information when handling queries. More broadly, they’re meant to serve an industry that’s shifting toward the use of AI agents and confronting security challenges.\n\nBefore it's here, it's on the Bloomberg Terminal LEARN MORE",
+                "score": 0.48850358
+              },
+              {
+                "title": "What is the Future of Journalism in the World of TikTok and AI",
+                "url": "https://news.northeastern.edu/2026/11/09/future-of-journalism-tiktok-ai",
+                "source": "news.northeastern.edu",
+                "summary": "11/05/26 – BOSTON, MA. – Meg Heckman, Associate Professor in the School of Journalism, moderates a conversation with Kathleen “Katie” Kingsbury, Opinion Editor for the New York Times, during the Jack Thomas Lecture held in Snell Library on Nov. 5, 2026. The lecture focused on the future of journalism, and the critical role a free press plays in a divided America. Photo by Matthew Modoono/Northeastern University\n\n A video camera's monitor shows Katie Kingsbury seated onstage during a lecture. [...] 11/05/26 – BOSTON, MA. – Meg Heckman, Associate Professor in the School of Journalism, moderates a conversation with Kathleen “Katie” Kingsbury, Opinion Editor for the New York Times, during the Jack Thomas Lecture held in Snell Library on Nov. 5, 2026. The lecture focused on the future of journalism, and the critical role a free press plays in a divided America. Photo by Matthew Modoono/Northeastern University [...] 11/05/26 – BOSTON, MA. – Meg Heckman, Associate Professor in the School of Journalism, moderates a conversation with Kathleen “Katie” Kingsbury, Opinion Editor for the New York Times, during the Jack Thomas Lecture held in Snell Library on Nov. 5, 2026. The lecture focused on the future of journalism, and the critical role a free press plays in a divided America. Photo by Matthew Modoono/Northeastern University",
+                "score": 0.42648935
+              },
+              {
+                "title": "Google Pushes New AI Chips. Why There Could Be an Opening.<!-- --> - Barron's",
+                "url": "https://www.barrons.com/articles/google-ai-tpu-systems-nvidia-8d354665",
+                "source": "barrons.com",
+                "summary": "### Monday.com Stock Drops. Strong Earnings Come With a Growth Warning.\n\nMonday.com reports better-than-expected third-quarter earnings, but its revenue forecast falls short.\n\n### Data-Center Moratoriums? They Aren’t Showing Up in Constellation Energy’s Guidance.\n\nConstellation Energy raises full-year earnings guidance even as the U.S midterm elections have made some on Wall Street concerned the data-center buildout could stall.\n\n### This Chinese Internet ETF Is a Winning AI Play",
+                "score": 0.41478088
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R04_read_url_routing",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "routing_read_url",
+        "difficulty": "easy",
+        "what_it_tests": "Đã có link cụ thể → read_url, không phải web_search."
+      },
+      "input": "Tóm tắt bài này giúp mình: https://openai.com/blog/gpt-5",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/blog/gpt-5"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://openai.com/blog/gpt-5"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://openai.com/blog/gpt-5",
+            "items": [
+              {
+                "title": "OpenAI",
+                "url": "https://openai.com/blog/gpt-5",
+                "source": "openai.com",
+                "summary": "OpenAI\n\n# 404\n\nSearch finds no result\n\nThe question still earns its keep\n\nAsk it a new way\n\nby [gpt-6-astra(opens in a new window)](https://chatgpt.com/?surface=work&model=gpt-6-astra-wm&openaicom-did=52cdc990-ae75-4748-bf07-215286d35858&openaicom_referred=true)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R05_limit_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_limit",
+        "difficulty": "easy",
+        "what_it_tests": "Trích đúng limit=10 từ '10 tweet'."
+      },
+      "input": "Lấy 10 tweet mới nhất của Elon Musk",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 10
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "timeline",
+          "args": {
+            "screenname": "elonmusk",
+            "limit": 10
+          },
+          "result": {
+            "tool": "get_user_tweets",
+            "error": "RuntimeError",
+            "message": "Missing RAPIDAPI_KEY env var"
+          }
+        }
+      ]
+    },
+    {
+      "id": "R06_timeframe_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_timeframe",
+        "difficulty": "medium",
+        "what_it_tests": "'tuần này' → timeframe=week."
+      },
+      "input": "Tin công nghệ trong tuần này",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "timeframe": "week"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": true,
+        "routing_correct": true,
+        "args_correct": true,
+        "actual_tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "topic": "news",
+              "query": "tin công nghệ nổi bật",
+              "timeframe": "week"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": null,
+        "failure_type": null,
+        "failures": []
+      },
+      "tool_results": [
+        {
+          "tool": "lookup",
+          "args": {
+            "topic": "news",
+            "query": "tin công nghệ nổi bật",
+            "timeframe": "week"
+          },
+          "result": {
+            "tool": "web_search",
+            "query": "tin công nghệ nổi bật",
+            "topic": "news",
+            "timeframe": "week",
+            "items": [
+              {
+                "title": "Điểm tin kinh tế thế giới nổi bật ngày 5/11/2026",
+                "url": "https://nhipsongkinhdoanh.vn/diem-tin-kinh-te-the-gioi-noi-bat-ngay-5-11-2026-34802.htm",
+                "source": "nhipsongkinhdoanh.vn",
+                "summary": "1. Singapore thúc đẩy công nghệ AI trong lĩnh vực tài chính: Cơ quan Quản lý Tiền tệ Singapore (MAS) vừa chính thức đưa Viện Tương lai Tài chính (FFI) vào hoạt động nhằm đẩy mạnh ứng dụng công nghệ mới và đổi mới sáng tạo trong ngành tài chính. Trọng tm ban đầu của FFI là trí tuệ nhn tạo (AI) thông qua ba trụ cột: PathFin.ai, BuildFin.ai và SafeFin.ai. Các chương trình này kết nối những tổ chức tài chính để chia sẻ kinh nghiệm thực tiễn, thiết lập tiêu chuẩn và công cụ an toàn cho AI tự hành, [...] AI trong ngành sau giai đoạn khuyến khích ứng dụng rộng rãi công nghệ này. [...] khi Mỹ và Liên minh chu u đổ hàng tỷ USD nhằm bắt kịp công nghệ.",
+                "score": 0.6208291
+              },
+              {
+                "title": "Điểm tin Khoa học và Công nghệ hằng tuần",
+                "url": "https://haiphong.gov.vn/thong-bao-76144/diem-tin-khoa-hoc-va-cong-nghe-hang-tuan-999065",
+                "source": "haiphong.gov.vn",
+                "summary": "(Haiphong.gov.vn) - Trung tâm Công nghệ Thông tin và Truyền thông Hải Phòng trân trọng gửi các cơ quan, đơn vị Điểm tin Khoa học và Công nghệ số 41 năm 2026 (tuần từ ngày 19/10/2026 đến ngày 25/10/2026), tổng hợp các thông tin nổi bật về khoa học, công nghệ, đổi mới sáng tạo và chuyển đổi số trong nước và trên địa bàn thành phố.\n\nĐiểm tin được đăng tải tại địa chỉ: [...] Xã Quyết Thắng thông báo cho thuê nhà, đất tại cơ sở 3 Trường Mầm non Tiên Cường\nCông bố kết quả thi tuyển phương án kiến trúc Trường THPT chuyên Nguyễn Trãi\nThông báo về việc cho thuê nhà, đất do Trung tâm dịch vụ sự nghiệp công phường Nhị Chiểu quản lý, khai thác: Trụ sở UBND phường Duy Tân (cũ)\nCông khai thủ tục hành chính được sửa đổi, bổ sung lĩnh vực thủy sản và kiểm ngư thuộc phạm vi chức năng quản lý của Sở Nông nghiệp và Môi trường [...] QR Code\nLấy ý kiến Nhân dân về đề nghị truy tặng danh hiệu “Bà mẹ Việt Nam anh hùng” cho bà Lưu Thị Đặt\nTòa án nhân dân Khu vực 10 – Hải Phòng thông báo tìm bà Nguyễn Thị Đằm\nThông báo về việc cho thuê nhà do Ban Quản lý dự án đầu tư xây dựng xã Nam Sách quản lý, khai thác Khu đất: Trụ sở chi cục thuế khu vực Nam Thanh (Chi cục thuế huyện Nam Sách cũ), xã Nam Sách, thành phố Hải Phòng\nCảnh báo về đề xuất kiểm tra bắt buộc đối với đồ gỗ nội thất lắp ráp xuất khẩu sang Đài Loan",
+                "score": 0.60610276
+              },
+              {
+                "title": "Tổng thống: Đầu tư vào vũ trụ là đầu tư cho tương lai, kỳ vọng năng lực công nghệ Đài Loan trở thành động lực mới đưa nhân loại vươn ra vũ trụ-Tin tức-Radio Taiwan International",
+                "url": "https://www.rti.org.tw/vn/news?uid=3&pid=990632",
+                "source": "rti.org.tw",
+                "summary": "Kết thúc bài phát biểu, Tổng thống Lại Thanh Đức nhấn mạnh, trước sự phát triển nhanh chóng của ngành công nghiệp vũ trụ toàn cầu, chính phủ sẽ tiếp tục là chỗ dựa vững chắc cho các doanh nghiệp, hỗ trợ nghiên cứu và phát triển công nghệ tự chủ, tăng cường hợp tác quốc tế, để năng lực khoa học công nghệ của Đài Loan trở thành động lực mới đưa nhn loại vươn tới vũ trụ.\n\nLệ Phương\n\nQuay về Tổng quan Về trang trước\n\nTin tức nổi ḅt trong tùn [...] Skip to the main content block\n\n::: Trang chủ| Sơ đồ website| Podcasts|\n\n|\n\nLanguage\n\nmenu close\n\nTin tức   Chương trình   Videos   Podcasts   Giới thiệu về RTI\n\n# Formosa Dream Chasers - Programs - RTI Radio Taiwan International-logo\n\nTin tức\n\n| Tổng quan  Xem nhiều\n\n Tìm kiếm\n\nTìm kiếm\n\nTin nổi ḅt \n\nBê bối ngoại tình của CEO Nvidia Jensen Huang: Vị trí CEO sẽ gặp thách thức nếu rò rỉ thông tin mật (ảnh tư liệu: Reuters) [...] Giải chạy Điền Trung (Tianzhong), huyện Chương Hóa (Zhanghua), đã chính thức diễn ra vào sáng ngày8/11. Sự kiện này nổi tiếng với những quầy ẩm thực tiếp sức vô cùng thịnh soạn, với hơn 100 con gà quay, hơn 300 kg thịt bò bít tết, hơn 100 con vịt quay và cả hơn 1...\n\n 16 hr\n\nTổng thống: Đầu tư vào vũ trụ là đầu tư cho tương lai, kỳ vọng năng lực công nghệ Đài Loan trở thành động lực mới đưa nhn loại vươn ra vũ trụ. (Ảnh: CNA)",
+                "score": 0.3626311
+              },
+              {
+                "title": "CÔNG AN TỈNH LÂM ĐỒNG GIỮ VỮNG AN NINH TỪ CAO NGUYÊN ĐẾN MIỀN BIỂN: KẾT QUẢ CÔNG TÁC NỔI BẬT THÁNG 10 VÀ NHIỆM VỤ TRỌNG TÂM THÁNG 11/2026",
+                "url": "https://congan.lamdong.gov.vn/cong-an-tinh-lam-dong-giu-vung-an-ninh-tu-cao-nguyen-den-mien-bien-ket-qua-cong-tac-noi-bat-thang-10-va-nhiem-vu-trong-tam-thang-112026-N11789.aspx",
+                "source": "congan.lamdong.gov.vn",
+                "summary": "Thời gian gần đây, tình hình sử dụng thiết bị bay không người lái (UAV) và phương tiện bay khác xâm nhập khu vực cấm bay tại một số cảng hàng không diễn biến phức tạp, đe dọa an ninh, an toàn hàng không. Một số cá nhân, tổ chức tiếp tục lợi dụng không gian mạng để lan truyền thông tin giả mạo, sai sự thật nhằm câu view, câu like hoặc kích động phản ứng của người dân phục vụ mưu đồ xấu. Tội phạm lừa đảo sử dụng công nghệ cao tiếp tục diễn biến phức tạp; phương thức, thủ đoạn ngày càng tinh vi, [...] ### Trại tạm giam số 1 phối hợp với Bệnh xá Công an tỉnh khám sức khỏe định kỳ cho phạm nhân\n\nCông an xã Bảo Lâm 3 tập huấn kỹ năng lái xe mô tô an toàn cho lực lượng cơ sở\n\n### Công an xã Bảo Lâm 3 tập huấn kỹ năng lái xe mô tô an toàn cho lực lượng cơ sở\n\nĐưa công nghệ đến gần hơn với người yếu thế\n\n### Đưa công nghệ đến gần hơn với người yếu thế\n\nCông an xã Đạ Huoai tăng cường quản lý, giáo dục người chấp hành án hình sự tại cộng đồng [...] ### Công an xã Đắk Wil tham gia diễn tập chiến đấu phòng thủ năm 2026\n\n.png)\n\n# \n\nCơ quan chủ quản: Công an tỉnh Lâm Đồng  \nĐơn vị quản trị: Đội Công nghệ Thông tin - Phòng Tham mưu  \nBản quyền thuộc về Công an tỉnh Lâm Đồng  \nKhi sử dụng lại thông tin, đề nghị ghi rõ nguồn \"Trang TTĐT Công an tỉnh Lâm Đồng\"",
+                "score": 0.30538702
+              },
+              {
+                "title": "Nghệ An: Thông tin nổi bật ngày 9/11",
+                "url": "https://baonghean.vn/nghe-an-thong-tin-noi-bat-ngay-9-11-10355501.html",
+                "source": "baonghean.vn",
+                "summary": "Thời sự\n\n# Nghệ An: Thông tin nổi bật ngày 9/11\n\nNguyên Sơn - Trần Hải • 09/11/2026 19:00\n\nĐBQH đoàn Nghệ An tham gia nhiều ý kiến trong phiên thảo luận tại hội trường; Nghệ An khai giảng khóa đào tạo trình độ đại học chuyên ngành Công nghệ thông tin; Giảm giá xăng, dầu tác động tích cực đến đời sống dn sinh; Rà soát toàn diện công tác an toàn khai thác khoáng sản... là những thông tin nổi bật trong ngày. [...] \\ Sáng 9/11, Ban Tổ chức Tỉnh ủy Nghệ An phối hợp với Trường Đại học Vinh tổ chức Lễ khai giảng khóa đào tạo trình độ đại học chuyên ngành Công nghệ thông tin, hình thức vừa làm, vừa học, dành cho 76 cán bộ, công chức cấp xã.\n\nĐại diện Lãnh đạo Ban Tổ chức Tỉnh ủy, BGH Trường Đại học Vinh chụp ảnh lưu niệm với học viên..png)\n\nĐại diện Lãnh đạo Ban Tổ chức Tỉnh ủy, BGH Trường Đại học Vinh chụp ảnh lưu niệm với học viên. [...] \\ Tại Vương quốc Đan Mạch, ngày 9/11, đoàn công tác tỉnh Nghệ An do đồng chí Dương Đình Chỉnh - Ủy viên Ban Thường vụ Tỉnh ủy, Phó Chủ tịch Thường trực HĐND tỉnh làm Trưởng đoàn đã có buổi làm việc với Hiệp hội Công nghiệp Thiết bị Y tế Đan Mạch\n\nToàn cảnh buổi làm việc.\n\nToàn cảnh cuộc làm việc.",
+                "score": 0.5414337
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R07_search_type_arg",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "arg_search_type",
+        "difficulty": "medium",
+        "what_it_tests": "'phổ biến/top' → search_type=Top (không phải Latest)."
+      },
+      "input": "Cho mình các tweet phổ biến (top) nhất về OpenAI",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "social_search",
+            "args": {
+              "search_type": "Top"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ReadError: [WinError 10053] An established connection was aborted by the software in your host machine"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R08_out_of_scope",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope",
+        "difficulty": "easy",
+        "what_it_tests": "Câu ngoài phạm vi research → KHÔNG gọi tool, từ chối/định hướng."
+      },
+      "input": "Giải giúp mình bài toán tích phân: nguyên hàm của x^2 là gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R09_no_tool_capability",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "no_tool_meta",
+        "difficulty": "easy",
+        "what_it_tests": "Câu hỏi meta → trả lời thẳng, KHÔNG gọi tool."
+      },
+      "input": "Bạn là gì và làm được những gì?",
+      "expect": {
+        "no_tool": true,
+        "behavior": "answer_without_tool"
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "unnecessary_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R10_missing_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_handle",
+        "difficulty": "medium",
+        "what_it_tests": "Thiếu handle → ask_user, KHÔNG đoán bừa người nào."
+      },
+      "input": "Tóm tắt 5 tweet mới nhất giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [WinError 10053] An established connection was aborted by the software in your host machine"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R11_missing_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "clarify_missing_url",
+        "difficulty": "medium",
+        "what_it_tests": "Nói 'bài này' nhưng không có link → ask_user xin URL."
+      },
+      "input": "Tóm tắt bài viết này hộ mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "text"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "routing_correct": false,
+        "args_correct": false,
+        "actual_tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://openai.com/index/learning-to-reason-with-llms/"
+            }
+          }
+        ],
+        "actual_text": null,
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "missing_tool_call",
+        "failure_type": "missing_info",
+        "failures": [
+          "missing tool call clarify",
+          "extra tool call fetch"
+        ]
+      },
+      "tool_results": [
+        {
+          "tool": "fetch",
+          "args": {
+            "url": "https://openai.com/index/learning-to-reason-with-llms/"
+          },
+          "result": {
+            "tool": "read_url",
+            "url": "https://openai.com/index/learning-to-reason-with-llms/",
+            "items": [
+              {
+                "title": "Learning to reason with LLMs | OpenAI",
+                "url": "https://openai.com/index/learning-to-reason-with-llms/",
+                "source": "openai.com",
+                "summary": "Learning to reason with LLMs \\| OpenAI\n\nSeptember 12, 2024\n\n[Release](https://openai.com/research/index/release/)\n\n# Learning to reason with LLMs\n\nWe are introducing OpenAI o1, a new large language model trained with reinforcement learning to perform complex reasoning. o1 thinks before it answers—it can produce a long internal chain of thought before responding to the user.\n\n[Contributions](https://openai.com/openai-o1-contributions/) [Try ChatGPT(opens in a new window)](https://chatgpt.com/?openaicom-did=ace47a51-46de-4d9c-a6a5-e7819b768e45&openaicom_referred=true)\n\n## This post introduced OpenAI o1.\n\nThe ChatGPT access information reflects the September 2024 launch. o1‑preview and o1‑mini have been retired from the API; o1 is deprecated. See the [API deprecation schedule⁠(opens in a new window)](https://developers.openai.com/api/docs/deprecations).\n\nFor the current experience:\n\n[View current API models(opens in a new window)](https://developers.openai.com/api/docs/models)\n\n[Try ChatGPT(opens in a new window)](https://chatgpt.com/?openaicom-did=ace47a51-46de-4d9c-a6a5-e7819b768e45&openaicom_referred=true)\n\nListen to article8:58\n\nOpenAI o1 ranks in the 89th percentile on competitive programming questions (Codeforces), places among the top 500 students in the US in a qualifier for the USA Math Olympiad (AIME), and exceeds human PhD-level accuracy on a benchmark of physics, biology, and chemistry problems (GPQA). While the work needed to make this new model as easy to use as current models is still ongoing, we are releasing an early version of this model, OpenAI o1‑preview, for immediate use in ChatGPT and to [trusted API users⁠(opens in a new window)](https://platform.openai.com/docs/guides/rate-limits/usage-tiers).\n\nOur large-scale reinforcement learning algorithm teaches the model how to think productively using its chain of thought in a highly data-efficient training process. We have found that the performance of o1 consistently improves with more reinforcement learning (train-time compute) and with more time spent thinking (test-time compute). The constraints on scaling this approach differ substantially from those of LLM pretraining, and we are continuing to investigate them.\n\n![The image shows two scatter plots comparing \"o1 AIME accuracy\" during training and at test time. Both charts have \"pass@1 accuracy\" on the y-axis and compute (log scale) on the x-axis. The dots indicate increasing accuracy with more compute time.](https://images.ctfassets.net/kftzwdyauwt9/3OO9wpK8pjcdemjd7g50xk/5ec2cc9d11f008cd754e8cefbc1c99f5/compute.png?w=3840&q=90&fm=webp)\n\no1 performance smoothly improves with both train-time and test-time compute\n\n## Evals\n\nTo highlight the reasoning improvement over GPT‑4o, we tested our models on a diverse set of human exams and ML benchmarks. We show that o1 significantly outperforms GPT‑4o on the vast majority of these reasoning-heavy tasks. Unless otherwise specified, we evaluated o1 on the maximal test-time compute setting.\n\n![Competition math eval (AIME 2024)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-0.png?w=3840&q=90&fm=webp)![Competition math eval (AIME 2024)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-0-dark.png?w=3840&q=90&fm=webp)\n\n![Competition code (CodeForces)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-1.png?w=3840&q=90&fm=webp)![Competition code (CodeForces)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-1-dark.png?w=3840&q=90&fm=webp)\n\n![PhD-Level Science Questions (GPQA Diamond)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-2.png?w=3840&q=90&fm=webp)![PhD-Level Science Questions (GPQA Diamond)](https://cdn.openai.com/reasoning-evals/v3/headline-mobile-2-dark.png?w=3840&q=90&fm=webp)\n\no1 greatly improves over GPT-4o on challenging reasoning benchmarks. Solid bars show pass@1 accuracy and the shaded region shows the performance of majority vote (consensus) with 64 samples.\n\n![Competition evals for Math (AIME 2024), Code (C"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "R12_confirm_before_send",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "confirm_before_write",
+        "difficulty": "medium",
+        "what_it_tests": "Hành động ghi (gửi) → xác nhận trước (ask_user yes_no), không tự gửi."
+      },
+      "input": "Đăng bản tin này lên Telegram giúp mình",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "clarify",
+            "args": {
+              "response_type": "yes_no"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_boundary",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ReadError: [WinError 10053] An established connection was aborted by the software in your host machine"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R13_parallel_web_and_tweets",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "parallel_tool_calls",
+        "difficulty": "hard",
+        "what_it_tests": "Một request cần hai nguồn → gọi cả web_search và search_tweets; eval không phụ thuộc thứ tự tool call."
+      },
+      "input": "Tìm trên web tin AI hôm nay và tìm thêm tweet về AI.",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "AI",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          },
+          {
+            "name": "social_search",
+            "args": {
+              "query": "AI"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "R14_out_of_scope_coding",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": false,
+      "metadata": {
+        "skill": "out_of_scope_coding",
+        "difficulty": "easy",
+        "what_it_tests": "Câu coding ngoài phạm vi research/news → KHÔNG gọi tool."
+      },
+      "input": "Viết giúp mình một hàm Python tính Fibonacci bằng recursion.",
+      "expect": {
+        "no_tool": true,
+        "behavior": "refuse"
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "out_of_scope",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M01_clarify_then_fill",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_fill",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: carry limit=5 từ lượt 1 + map tên Elon Musk thành handle elonmusk từ lượt 2."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt 5 tweet mới nhất giúp mình"
+        },
+        {
+          "role": "user",
+          "content": "Của Elon Musk nhé"
+        },
+        {
+          "role": "user",
+          "content": "Giữ đúng 5 tweet, đừng đổi số lượng"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 5
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M02_carryover_timeframe",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_carryover",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: chỉ xử lý latest turn, carry timeframe=day và topic=news, query robotics."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tin AI hôm nay có gì?"
+        },
+        {
+          "role": "user",
+          "content": "Còn về robotics thì sao?"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ tìm robotics thôi, vẫn là tin hôm nay"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "robotics",
+              "topic": "news",
+              "timeframe": "day"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M03_correction_handle",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên thường, sửa Sam Altman→Andrej Karpathy, dùng handle karpathy và limit=3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tweet mới nhất của Sam Altman"
+        },
+        {
+          "role": "user",
+          "content": "À nhầm, của Andrej Karpathy"
+        },
+        {
+          "role": "user",
+          "content": "Lấy 3 tweet mới nhất nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "karpathy",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M04_clarify_then_url",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_clarify_url",
+        "difficulty": "medium",
+        "what_it_tests": "3 turns: sau khi được cung cấp URL, latest turn xác nhận chỉ đọc link đó → read_url đúng url."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Tóm tắt bài này hộ mình"
+        },
+        {
+          "role": "user",
+          "content": "https://anthropic.com/news/claude"
+        },
+        {
+          "role": "user",
+          "content": "Chỉ đọc đúng link đó thôi"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "fetch",
+            "args": {
+              "url": "https://anthropic.com/news/claude"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "missing_info",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M05_correction_limit",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_arg_correction",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: map tên Elon Musk, carry handle elonmusk, sửa limit 10→3."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Lấy 10 tweet mới nhất của Elon Musk"
+        },
+        {
+          "role": "user",
+          "content": "Cho mình 3 thôi"
+        },
+        {
+          "role": "user",
+          "content": "Vẫn của Elon Musk nhé"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "timeline",
+            "args": {
+              "screenname": "elonmusk",
+              "limit": 3
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_arg_value",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    },
+    {
+      "id": "M06_switch_tool",
+      "phase": "B",
+      "suite": "base",
+      "case_suite": "base",
+      "is_multiturn": true,
+      "metadata": {
+        "skill": "multiturn_switch_tool",
+        "difficulty": "hard",
+        "what_it_tests": "3 turns: explicitly bỏ Twitter, chuyển sang web_search news, giữ chủ đề OpenAI."
+      },
+      "input": [
+        {
+          "role": "user",
+          "content": "Mọi người nói gì về OpenAI trên Twitter?"
+        },
+        {
+          "role": "user",
+          "content": "Bỏ Twitter, chuyển sang tìm trên web tin tức đi"
+        },
+        {
+          "role": "user",
+          "content": "Giữ chủ đề OpenAI"
+        }
+      ],
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "lookup",
+            "args": {
+              "query": "OpenAI",
+              "topic": "news"
+            }
+          }
+        ]
+      },
+      "result": {
+        "passed": false,
+        "failure_type": "provider_error",
+        "case_failure_type": "wrong_tool",
+        "observed_mismatch": "provider_error",
+        "failures": [
+          "ConnectError: [Errno 11001] getaddrinfo failed"
+        ],
+        "actual_tool_calls": [],
+        "actual_text": null,
+        "routing_correct": false,
+        "args_correct": false
+      },
+      "tool_results": []
+    }
+  ]
+}
