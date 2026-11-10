@@ -3,5 +3,105 @@
   "dataset_role": "group",
   "description": "Case do NHÓM tự viết thêm để cover thêm trường hợp. Mỗi case cần: id, phase='B', query HOẶC turns, failure_type (thuộc allowed_failure_types), và expect (tool_calls[...] hoặc no_tool=true). Nên kèm metadata.what_it_tests.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_dedupe_sources",
+      "phase": "B",
+      "query": "Tôi đã có hai nguồn https://example.com/story?utm_source=mail và https://example.com/story. Hãy loại nguồn trùng URL trước khi tổng hợp.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "dedupe_sources", "args": {}}]},
+      "metadata": {"what_it_tests": "Yêu cầu gộp nguồn đã có phải route tới tool mới dedupe_sources."}
+    },
+    {
+      "id": "G02_social_top",
+      "phase": "B",
+      "query": "Tìm các tweet phổ biến nhất về AI trên X.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "social_search", "args": {"search_type": "Top"}}]},
+      "metadata": {"what_it_tests": "Tweet phổ biến trên X phải dùng social_search với Top."}
+    },
+    {
+      "id": "G03_missing_article_url",
+      "phase": "B",
+      "query": "Đọc bài viết này và rút ra ba ý chính giúp tôi.",
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "text"}}]},
+      "metadata": {"what_it_tests": "Thiếu URL thì hỏi lại thay vì bịa đường dẫn."}
+    },
+    {
+      "id": "G04_news_today",
+      "phase": "B",
+      "query": "Tìm tin tức về robotics hôm nay trên web.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "robotics", "topic": "news", "timeframe": "day"}}]},
+      "metadata": {"what_it_tests": "Tin trên web hôm nay dùng lookup với topic news và timeframe day."}
+    },
+    {
+      "id": "G05_out_of_scope",
+      "phase": "B",
+      "query": "Giải phương trình x^2 - 4 = 0 cho tôi.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true},
+      "metadata": {"what_it_tests": "Yêu cầu giải toán ngoài phạm vi research không gọi tool."}
+    },
+    {
+      "id": "G06_handle_and_limit_carryover",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Lấy các tweet mới nhất của một người."},
+        {"role": "user", "content": "Người đó là Elon Musk."},
+        {"role": "user", "content": "Lấy đúng 3 tweet nhé."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "timeline", "args": {"screenname": "elonmusk", "limit": 3}}]},
+      "metadata": {"what_it_tests": "Giữ handle và số lượng từ các lượt trước."}
+    },
+    {
+      "id": "G07_switch_social_to_web",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tìm tweet về OpenAI."},
+        {"role": "user", "content": "Bây giờ bỏ X/Twitter, chuyển sang tin tức trên web."},
+        {"role": "user", "content": "Giữ chủ đề OpenAI và chỉ lấy tin hôm nay."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "OpenAI", "topic": "news", "timeframe": "day"}}]},
+      "metadata": {"what_it_tests": "Ý định mới nhất chuyển từ social_search sang lookup."}
+    },
+    {
+      "id": "G08_news_timeframe_carryover",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tìm tin công nghệ tuần này trên web."},
+        {"role": "user", "content": "Đổi chủ đề sang robotics."},
+        {"role": "user", "content": "Vẫn giữ khoảng thời gian tuần này."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "robotics", "topic": "news", "timeframe": "week"}}]},
+      "metadata": {"what_it_tests": "Thay chủ đề nhưng giữ timeframe qua nhiều lượt."}
+    },
+    {
+      "id": "G09_send_without_confirmation",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tôi muốn gửi bản tin lên Telegram."},
+        {"role": "user", "content": "Nội dung là: AI có nhiều nghiên cứu mới."},
+        {"role": "user", "content": "Tôi chưa xác nhận gửi, hãy hỏi trước."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "Không gọi send trước khi người dùng xác nhận rõ ràng."}
+    },
+    {
+      "id": "G10_url_later_turn",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Đọc và tóm tắt bài viết giúp tôi."},
+        {"role": "user", "content": "Đây là URL: https://example.com/research-report"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://example.com/research-report"}}]},
+      "metadata": {"what_it_tests": "Sau khi có URL ở lượt sau phải chuyển từ clarify sang fetch."}
+    }
+  ]
 }

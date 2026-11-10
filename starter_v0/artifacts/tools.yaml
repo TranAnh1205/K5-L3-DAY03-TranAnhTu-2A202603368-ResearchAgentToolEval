@@ -14,6 +14,22 @@
 #   - Make the `send` confirmation boundary explicit.
 #   - Declare your new tool(s) at the end of this file.
 tools:
+  - name: dedupe_sources
+    description: "Gộp các nguồn nghiên cứu trùng URL trong danh sách item đã có. Dùng khi user yêu cầu loại nguồn trùng trước khi tổng hợp; không dùng để tìm hoặc tải nguồn mới. Giữ item đầu tiên và bỏ tham số theo dõi URL."
+    parameters:
+      type: object
+      properties:
+        items:
+          type: array
+          description: "Các nguồn đã có, mỗi item nên có url và có thể có title/summary."
+          items:
+            type: object
+            properties:
+              url: {type: string, description: "URL tuyệt đối của nguồn"}
+              title: {type: string, description: "Tiêu đề nguồn"}
+              summary: {type: string, description: "Tóm tắt nếu có"}
+      required: [items]
+
   # ---------------- Core tools ----------------
   - name: clarify
     description: "Gửi một câu hỏi cho người dùng."
@@ -26,16 +42,16 @@ tools:
       required: [question]
 
   - name: timeline
-    description: "Lấy các bài đăng gần đây."
+    description: "Lấy bài đăng gần đây của MỘT tài khoản X/Twitter. Dùng khi user hỏi bài của một người hoặc một handle cụ thể; Sam Altman=sama, Elon Musk=elonmusk. Không dùng cho tìm theo chủ đề hoặc tin web."
     parameters:
       type: object
       properties:
-        screenname: {type: string, default: "", description: "Tên tài khoản"}
+        screenname: {type: string, default: "", description: "Handle tài khoản không có @. Tên Sam Altman → sama; Elon Musk → elonmusk. Hỏi lại nếu không xác định được tài khoản."}
         limit: {type: integer, default: 5, description: "Số lượng"}
       required: [screenname]
 
   - name: social_search
-    description: "Tìm trên mạng xã hội."
+    description: "Tìm bài đăng X/Twitter theo CHỦ ĐỀ khi user yêu cầu tweet, X hoặc Twitter. Không dùng cho tin tức trên web, kể cả khi hội thoại trước đó từng nói về Twitter nhưng lượt mới chuyển sang web."
     parameters:
       type: object
       properties:
@@ -45,13 +61,13 @@ tools:
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tìm trên WEB. Dùng cho tin tức, bài báo, thông tin chung; đặt topic=news và timeframe=day khi hỏi tin hôm nay, week khi hỏi tin tuần này. Ưu tiên ý định mới nhất trong hội thoại; không dùng để tìm tweet/X/Twitter."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
+        query: {type: string, default: "", description: "Từ khóa chủ đề ngắn gọn, ví dụ AI hoặc robotics; không tự thêm từ news khi topic=news."}
+        topic: {type: string, enum: [general, news], default: "general", description: "news cho tin tức/thời sự; general cho tra cứu khác."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "day=hôm nay, week=tuần này, month=tháng này, year=năm nay; giữ mốc thời gian qua các lượt."}
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 
