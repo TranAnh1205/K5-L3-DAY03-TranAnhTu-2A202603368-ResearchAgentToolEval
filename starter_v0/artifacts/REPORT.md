@@ -1,4 +1,4 @@
-# Day 03 Lab v2 Report — Research Agent
+# Day 03 Lab Report — Research Agent
 
 Phần A giới thiệu agent để demo; Phần B ghi bằng chứng từ run và transcript thật.
 
@@ -12,7 +12,7 @@ Phần A giới thiệu agent để demo; Phần B ghi bằng chứng từ run v
 
 | Thành viên | Đóng góp có trong bản hợp nhất |
 |---|---|
-| Tran Anh Tu (`TranAnhTu_03368`) | **Nhánh nền của bản nộp chung.** Có chuỗi baseline và tối ưu v0–v5, `system_prompt.md`, `tools.yaml`, UI Streamlit (`app.py`), luồng chat và chặn gửi (`chat.py`), bốn tool mới `dedupe_sources`, `wiki`, `hn_search`, `github_repos`, 10 case eval nhóm, unit test, run và transcript. Bản hợp nhất được xây trên commit `61f285a` của nhánh này trước khi ghép phần của các thành viên khác. |
+| Tran Anh Tu (`TranAnhTu_03368`) | **Nhánh nền của bản nộp chung. Tú phụ trách bản tối ưu v3 OpenAI đạt 20/20 base và xây UI Streamlit (`app.py`).** Nhánh của Tú có chuỗi baseline và tối ưu v0–v5, `system_prompt.md`, `tools.yaml`, luồng chat và chặn gửi (`chat.py`), bốn tool mới `dedupe_sources`, `wiki`, `hn_search`, `github_repos`, 10 case eval nhóm, unit test, run và transcript. Bản hợp nhất được xây trên commit `61f285a` của nhánh này trước khi ghép phần của các thành viên khác. |
 | Pham Huu Duc (`PhamHuuDuc_03380`) | Tool `calculator` dùng cho số liệu nghiên cứu, poster demo, run OpenRouter v1–v3 và transcript. Phần tính toán đã được giới hạn cú pháp và bổ sung test trước khi kích hoạt. |
 | Nguyen Tran Anh Khoi (`nguyentrananhkhoi-03422`) | Bộ unit test TODO và rà soát báo cáo trên nhánh kế thừa Đức; lịch sử commit được giữ trong merge. Các test trùng mục tiêu với bản hiện tại được giữ một bản. |
 | Khoa (`llkhoa`) | Sửa xử lý giới hạn kết quả ở `timeline`, `social_search`, `lookup`, `policy` và định dạng nguồn thiếu URL. |
@@ -74,7 +74,7 @@ Số liệu lấy từ `artifacts/version_log.csv` và `runs/*.json`.
 | v0 | baseline | Đo prompt và tool declaration ban đầu bằng OpenAI `gpt-4o-mini` | — | case_accuracy 0.65 (13/20; 0 provider error) | `runs/v0_B_base_openai_20261110T103307388725.json` |
 | v1 | `artifacts/system_prompt.md` | Hỏi lại khi thiếu account hoặc URL thay vì đoán sẽ sửa lỗi R10/R11 | 0.65 | 0.90 (18/20; 0 provider error) | `runs/v1_B_base_openai_20261110T104121957586.json` |
 | v2 | `artifacts/system_prompt.md` | Hỏi xác nhận bằng `clarify(response_type="yes_no")` trước khi gửi sẽ sửa R12 | 0.90 | 0.85 (17/20; R12 PASS, nhưng R01/M02/M06 FAIL) | `runs/v2_B_base_openai_20261110T110731008259.json` |
-| v3 | `artifacts/tools.yaml` | Mô tả rõ `timeline`, `social_search`, `lookup` và args sẽ sửa routing nhiều lượt | 0.85 | 1.00 (20/20; 0 provider error) | `runs/v3_B_base_openai_20261110T110948519400.json` |
+| v3 (Tran Anh Tu) | `artifacts/tools.yaml` | Mô tả rõ `timeline`, `social_search`, `lookup` và args sẽ sửa routing nhiều lượt | 0.85 | 1.00 (20/20; 0 provider error) | `runs/v3_B_base_openai_20261110T110948519400.json` |
 | v4_6 | `artifacts/system_prompt.md` + `artifacts/tools.yaml`; thêm chốt gửi trong code | Kết nối đủ 11 tool, sửa prompt nhiều bước và mô tả policy mà không làm hồi quy routing base | 1.00 (v3-tool) | base 1.00 (20/20), group 1.00 (10/10), extension 1.00 (10/10); 0 provider error | `runs/v4_6_B_base_openai_20261110T210304240055.json`, `runs/v4_6_B_group_openai_20261110T210415181532.json`, `runs/v4_6_B_extension_openai_20261110T210342056688.json` |
 | v5 | Thêm `wiki`, `hn_search`, `github_repos` vào code, prompt và declaration | Bốn tool tự viết sẽ mở rộng nguồn nghiên cứu mà vẫn giữ routing cũ; eval nhóm kiểm tra cả bốn tool | base 1.00, group 1.00 (v4_6) | base 1.00 (20/20), group 1.00 (10/10), extension 1.00 (10/10); 0 provider error | `runs/v5_B_base_openai_20261110T215830021951.json`, `runs/v5_B_group_openai_20261110T215900376440.json`, `runs/v5_B_extension_openai_20261110T215935217433.json` |
 | team | Ghép đóng góp năm nhánh; thêm `calculator`, chuẩn hóa handle và xử lý input | Kết hợp các thay đổi có ích sẽ giữ điểm routing và không làm hỏng ranh giới xác nhận gửi | base/group/extension 1.00 (v5) | base 20/20, group 10/10, extension 10/10; 0 provider error; 128 unit test PASS | `runs/team_B_base_openai_20261110T231205543275.json`, `runs/team_B_group_openai_20261110T231243816153.json`, `runs/team_B_extension_openai_20261110T231321811094.json` |
@@ -128,7 +128,7 @@ Transcript mới: `transcripts/v4_6_openai_20261110T213256375363.transcript.json
 
 | Bonus | Evidence File | What Worked | Risk / Guardrail |
 |---|---|---|---|
-| UI | `app.py` | Streamlit local mở trên `http://localhost:8501`; cả 15 tool khai báo được đưa vào model; AppTest luồng chờ gửi/hủy không lỗi | UI cần một lần bấm xác nhận riêng trước khi Telegram POST; chưa có link public |
+| UI của Tran Anh Tu | `app.py` | Streamlit local mở trên `http://localhost:8501`; cả 15 tool khai báo được đưa vào model; AppTest luồng chờ gửi/hủy không lỗi | UI cần một lần bấm xác nhận riêng trước khi Telegram POST; chưa có link public |
 | Bốn tool mới | `tools/{dedupe_sources,wiki,hn_search,github_repos}/` | Mỗi tool có `tool.py`, `TOOL.md`, registry và declaration; G01/G02/G04/G05 đều PASS | Ba nguồn live không cần API key nhưng phụ thuộc dịch vụ ngoài; GitHub có rate limit |
 | Tool unit tests (`tests/`) | `tests/test_tools_todo.py`, `tests/test_chat_send_guard.py`, `tests/test_paper_tools.py`, `tests/test_rapidapi_errors.py`, `tests/test_calculator.py`, `tests/test_normalize_handle.py` | ≥3 test cho mỗi tool mới; toàn suite 128 PASS, 0 skipped; test chặn model tự xác nhận gửi, parse arXiv offline, chuẩn hóa handle và báo lỗi RapidAPI rõ ràng | HTTP của unit test được mock |
 | Smoke test ba nguồn mới | `scripts/smoke_all_tools.py`, `analysis/tool_smoke_new_tools.json` | wiki, hn_search, github_repos đều completed với API thật | Mỗi lần smoke chỉ lấy 1 item để tiết kiệm quota |
