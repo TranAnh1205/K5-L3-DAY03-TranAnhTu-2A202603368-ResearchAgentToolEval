@@ -6,6 +6,7 @@ from typing import Any
 import requests
 
 from tools._shared import TIMEOUT, err
+from tools.normalize_handle.tool import normalize_handle
 
 
 def _twitter_get(path: str, params: dict[str, Any]) -> dict[str, Any]:
@@ -57,8 +58,12 @@ def _tweets_from(data: dict[str, Any], limit: int) -> list[dict[str, Any]]:
 
 def get_user_tweets(screenname: str = "", limit: int = 5) -> dict[str, Any]:
     try:
-        data = _twitter_get("/timeline.php", {"screenname": screenname})
-        return {"tool": "get_user_tweets", "screenname": screenname, "items": _tweets_from(data, limit)}
+        normalized = normalize_handle(screenname)
+        if normalized.get("error") or not normalized["screenname"]:
+            raise ValueError("screenname must be a non-empty string")
+        handle = normalized["screenname"]
+        data = _twitter_get("/timeline.php", {"screenname": handle})
+        return {"tool": "get_user_tweets", "screenname": handle, "items": _tweets_from(data, limit)}
     except Exception as exc:
         return err("get_user_tweets", exc)
 
